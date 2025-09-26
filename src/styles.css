@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles */
+
+/* Std color palette variables */
+:root {
+  --app-text-color: rgba(69, 90, 100, 0.87);
+}
+
+/* Font color applied globally */
+html,
+body {
+  color: var(--app-text-color);
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Ensuring Angular Material inherits the std font color */
+body,
+.mat-typography,
+.mat-app-background {
+  color: var(--app-text-color);
+}
