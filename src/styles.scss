@@ -1,20 +1,22 @@
-/* Global Styles */
+/* Global Styles (SCSS) */
+@use "./theme/material-theme"; /* emits Material component styles */
+@use "./theme/viz" as viz; /* single source of truth brand tokens */
 
-/* Raw palette variables (pls avoid directly referencing in components and use semantic tokens as much as possible) */
+/* Raw palette variables (pls avoid directly referencing in components and use semantic tokens below as much as possible) */
 :root {
   --viz-text-color: rgba(69, 90, 100, 0.87);
-  --viz-purple: #8262bd;
-  --viz-orange: #ff4e00;
-  --viz-yellow: #ffc02e;
-  --viz-green: #9cd020;
-  --viz-gray: #4b4b4b;
-  --viz-black: #181818;
-  --viz-white: #ffffff;
-  --viz-red: #ce373f;
-  --viz-teal: #01807f;
-  --viz-success: #2d8150;
-  --viz-warning: #a36114;
-  --viz-background: #f9f9f9;
+  --viz-purple: #{viz.$viz-purple};
+  --viz-orange: #{viz.$viz-orange};
+  --viz-yellow: #{viz.$viz-yellow};
+  --viz-green: #{viz.$viz-green};
+  --viz-gray: #{viz.$viz-gray};
+  --viz-black: #{viz.$viz-black};
+  --viz-white: #{viz.$viz-white};
+  --viz-red: #{viz.$viz-red};
+  --viz-teal: #{viz.$viz-teal};
+  --viz-success: #{viz.$viz-success};
+  --viz-warning: #{viz.$viz-warning};
+  --viz-background: #{viz.$viz-background};
 
   /* Semantic design tokens (use these!) */
   --color-text: var(--viz-text-color);
@@ -31,10 +33,8 @@ html,
 body {
   color: var(--color-text);
   background-color: var(--color-bg);
-  font-family: "Soleto", sans-serif;
+  font-family: "Soleto", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 
 /* Ensuring Angular Material inherits the std font color */
@@ -45,8 +45,7 @@ body,
   background: inherit;
 }
 
-/* Utility helper classes for quick an consistent styling*/
-/* TODO Remove these later if not fully implemented */
+/* Utility helper classes for quick and consistent styling*/
 .text-primary {
   color: var(--color-text) !important;
 }

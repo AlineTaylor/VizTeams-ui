@@ -1,0 +1,31 @@
+@use "sass:map";
+
+/* Viz brand color tokens */
+$viz-purple: #8262bd;
+$viz-orange: #ff4e00;
+$viz-yellow: #ffc02e;
+$viz-green: #9cd020;
+$viz-gray: #4b4b4b;
+$viz-black: #181818;
+$viz-white: #ffffff;
+$viz-red: #ce373f;
+$viz-teal: #01807f;
+$viz-success: #2d8150;
+$viz-warning: #a36114;
+$viz-background: #f9f9f9;
+
+/* Map (for future iteration if needed) */
+$viz-colors: (
+  purple: $viz-purple,
+  orange: $viz-orange,
+  yellow: $viz-yellow,
+  green: $viz-green,
+  gray: $viz-gray,
+  black: $viz-black,
+  white: $viz-white,
+  red: $viz-red,
+  teal: $viz-teal,
+  success: $viz-success,
+  warning: $viz-warning,
+  background: $viz-background,
+);
