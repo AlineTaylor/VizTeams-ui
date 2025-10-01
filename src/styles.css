@@ -1,15 +1,38 @@
 /* Global Styles */
 
-/* Std color palette variables */
+/* Raw palette variables (pls avoid directly referencing in components and use semantic tokens as much as possible) */
 :root {
-  --app-text-color: rgba(69, 90, 100, 0.87);
+  --viz-text-color: rgba(69, 90, 100, 0.87);
+  --viz-purple: #8262bd;
+  --viz-orange: #ff4e00;
+  --viz-yellow: #ffc02e;
+  --viz-green: #9cd020;
+  --viz-gray: #4b4b4b;
+  --viz-black: #181818;
+  --viz-white: #ffffff;
+  --viz-red: #ce373f;
+  --viz-teal: #01807f;
+  --viz-success: #2d8150;
+  --viz-warning: #a36114;
+  --viz-background: #f9f9f9;
+
+  /* Semantic design tokens (use these!) */
+  --color-text: var(--viz-text-color);
+  --color-bg: var(--viz-background);
+  --color-accent: var(--viz-purple);
+  --color-accent-alt: var(--viz-orange);
+  --color-success: var(--viz-success);
+  --color-warning: var(--viz-warning);
+  --color-error: var(--viz-red);
 }
 
-/* Font color applied globally */
+/* Typography */
 html,
 body {
-  color: var(--app-text-color);
-  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-family: "Soleto", sans-serif;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -18,5 +41,24 @@ body {
 body,
 .mat-typography,
 .mat-app-background {
-  color: var(--app-text-color);
+  color: inherit;
+  background: inherit;
+}
+
+/* Utility helper classes for quick an consistent styling*/
+/* TODO Remove these later if not fully implemented */
+.text-primary {
+  color: var(--color-text) !important;
+}
+.text-accent {
+  color: var(--color-accent) !important;
+}
+.text-success {
+  color: var(--color-success) !important;
+}
+.text-warning {
+  color: var(--color-warning) !important;
+}
+.text-error {
+  color: var(--color-error) !important;
 }
