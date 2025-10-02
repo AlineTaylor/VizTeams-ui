@@ -1,0 +1,121 @@
+@use "@angular/material" as mat;
+@use "sass:color";
+@use "./viz" as viz; /* centralized raw color palette tokens */
+
+/* Helpers to define lighter / darker tonal steps */
+@function _tint($c, $weight) {
+  @return color.mix(white, $c, $weight);
+}
+@function _shade($c, $weight) {
+  @return color.mix(black, $c, $weight);
+}
+
+/* Custom palette maps conforming to Material palette stds. */
+$viz-primary-palette: (
+  50: _tint(viz.$viz-purple, 90%),
+  100: _tint(viz.$viz-purple, 80%),
+  200: _tint(viz.$viz-purple, 65%),
+  300: _tint(viz.$viz-purple, 50%),
+  400: _tint(viz.$viz-purple, 30%),
+  500: viz.$viz-purple,
+  600: _shade(viz.$viz-purple, 15%),
+  700: _shade(viz.$viz-purple, 30%),
+  800: _shade(viz.$viz-purple, 45%),
+  900: _shade(viz.$viz-purple, 60%),
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+$viz-accent-palette: (
+  50: _tint(viz.$viz-orange, 92%),
+  100: _tint(viz.$viz-orange, 85%),
+  200: _tint(viz.$viz-orange, 70%),
+  300: _tint(viz.$viz-orange, 55%),
+  400: _tint(viz.$viz-orange, 35%),
+  500: viz.$viz-orange,
+  600: _shade(viz.$viz-orange, 10%),
+  700: _shade(viz.$viz-orange, 25%),
+  800: _shade(viz.$viz-orange, 40%),
+  900: _shade(viz.$viz-orange, 55%),
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+$viz-warn-palette: (
+  50: _tint(viz.$viz-red, 90%),
+  100: _tint(viz.$viz-red, 80%),
+  200: _tint(viz.$viz-red, 65%),
+  300: _tint(viz.$viz-red, 50%),
+  400: _tint(viz.$viz-red, 30%),
+  500: viz.$viz-red,
+  600: _shade(viz.$viz-red, 15%),
+  700: _shade(viz.$viz-red, 30%),
+  800: _shade(viz.$viz-red, 45%),
+  900: _shade(viz.$viz-red, 60%),
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  ),
+);
+
+/* Feed custom palettes into Angular Material's palette factory. Default (500), lighter (300), darker (700), mirroring usual structure. */
+$primary-palette: mat.m2-define-palette($viz-primary-palette, 500, 300, 700);
+$accent-palette: mat.m2-define-palette($viz-accent-palette, 500, 300, 700);
+$warn-palette: mat.m2-define-palette($viz-warn-palette, 500, 300, 700);
+
+/* Typography */
+$app-typography: mat.m2-define-typography-config(
+  $font-family: "Soleto, sans-serif",
+);
+
+/* Defining light theme (basic, no dark theme for now) */
+/* TODO Dark theme?? */
+$light-theme: mat.m2-define-light-theme(
+  (
+    color: (
+      primary: $primary-palette,
+      accent: $accent-palette,
+      warn: $warn-palette,
+    ),
+    typography: $app-typography,
+    density: 0,
+  )
+);
+
+/* Emit all component theme styles */
+@include mat.all-component-themes($light-theme);
+
+/* Export limited runtime CSS variables to reflect exact 500 Viz tones. */
+:root {
+  --color-primary: #{mat.m2-get-color-from-palette($primary-palette, 500)};
+  --color-accent: #{mat.m2-get-color-from-palette($accent-palette, 500)};
+  --color-warn: #{mat.m2-get-color-from-palette($warn-palette, 500)};
+}
