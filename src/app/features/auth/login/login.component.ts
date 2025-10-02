@@ -13,7 +13,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class LoginComponent {
   loginForm: FormGroup = new FormGroup({
-    username: new FormControl('', Validators.required),
+    identifier: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required),
   });
 
@@ -28,12 +28,12 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.valid) {
-      const username = this.loginForm.value.username;
+  const identifier = this.loginForm.value.identifier;
       const password = this.loginForm.value.password;
 
-      this.authService.login(username, password).subscribe({
+  this.authService.login(identifier, password).subscribe({
         next: (res: any) => {
-          if(res?.token){
+          if (res?.token) {
             this.authService.setToken(res.token);
           }
           this.dialogRef.close();
@@ -46,6 +46,7 @@ export class LoginComponent {
       });
     }
   }
+
   // Password visibility toggle
   hide = signal(true);
   togglePasswordVisibility(event: MouseEvent) {

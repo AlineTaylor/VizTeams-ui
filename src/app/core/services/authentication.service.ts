@@ -16,9 +16,23 @@ export class AuthenticationService {
   // request will now be sent to the API
   constructor(private http: HttpClient, private router: Router) {}
 
-  login(username: string, password: string) {
-    return this.http.post<{ token: string }>(`${environment.apiUrl}/login`, {
-      username,
+  login(identifier: string, password: string) {
+    const isEmail = identifier.includes('@');
+    const body: any = { password };
+    if (isEmail) {
+      body.email = identifier.toLowerCase();
+    } else {
+      body.username = identifier;
+    }
+    return this.http.post<{ token: string }>(
+      `${environment.apiUrl}/login`,
+      body
+    );
+  }
+
+  signup(email: string, password: string) {
+    return this.http.post<{ token: string }>(`${environment.apiUrl}/signup`, {
+      email,
       password,
     });
   }

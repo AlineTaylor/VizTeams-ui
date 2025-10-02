@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
 import { LoginComponent } from '../../features/auth/login/login.component';
+import { SignupComponent } from '../../features/auth/signup/signup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../core/services/authentication.service';
 
@@ -18,6 +19,10 @@ export class HeaderComponent {
 
   openDialog() {
     this.dialog.open(LoginComponent);
+  }
+
+  openSignup() {
+    this.dialog.open(SignupComponent);
   }
 
   logout() {
