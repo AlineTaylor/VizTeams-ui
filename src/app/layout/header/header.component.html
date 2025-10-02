@@ -11,10 +11,10 @@
   </div>
   }
   <!-- Email/username and logout when logged in -->
+  //(isLoggedIn())
   @if(user$ | async; as user){
   <div class="user" mat-button>
     <span>{{ user.email || user.username }}</span>
     <button mat-button color="primary" (click)="logout()">Logout</button>
-  </div>
-  }
+  </div>}
 </mat-toolbar>

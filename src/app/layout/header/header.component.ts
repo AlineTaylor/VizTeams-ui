@@ -24,7 +24,10 @@ export class HeaderComponent {
   openSignup() {
     this.dialog.open(SignupComponent);
   }
-
+  
+  isLoggedIn() {
+    return this.authService.isLoggedIn();}
+  
   logout() {
     this.authService.logout();
   }
