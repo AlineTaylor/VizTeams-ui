@@ -22,8 +22,9 @@
 
   /* Semantic design tokens (use these!) */
   --color-text: var(--viz-text-color);
+  --color-text-alt: var(--viz-white);
   --color-bg: var(--viz-background);
-  --color-secondary-bg: var(--white-smoke);
+  --color-bg-alt: var(--white-smoke);
   --color-border: var(--dark-orange);
   --color-accent: var(--viz-orange);
   --color-accent-alt: var(--viz-purple);
