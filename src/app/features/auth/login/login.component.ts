@@ -1,8 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Router } from '@angular/router';
 import { SharedModule } from '../../../../shared/shared.module';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -18,6 +19,8 @@ export class LoginComponent {
 
   isError: boolean = false;
 
+  private dialogRef = inject(MatDialogRef<LoginComponent>);
+
   constructor(
     private authService: AuthenticationService,
     private router: Router
@@ -30,7 +33,10 @@ export class LoginComponent {
 
       this.authService.login(username, password).subscribe({
         next: (res: any) => {
-          console.log(res);
+          if(res?.token){
+            this.authService.setToken(res.token);
+          }
+          this.dialogRef.close();
           this.router.navigate(['/']);
         },
         error: (error: any) => {
