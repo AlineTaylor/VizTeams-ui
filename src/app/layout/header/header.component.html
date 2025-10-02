@@ -3,15 +3,15 @@
     <img src="/vizient-logo-registered.svg" alt="Vizient logo" />
     <span>VizTeams</span>
   </div>
-  <!-- Show Sign in when not logged in -->
+  <!-- "Sign In" when not logged in -->
   @if(!(user$ | async); as noUser){
-    <button class="user" mat-button (click)="openDialog()">Sign in</button>
+  <button class="user" mat-button (click)="openDialog()">Sign in</button>
   }
-  <!-- Show user identity and logout when logged in -->
+  <!-- email/username and logout when logged in -->
   @if(user$ | async; as user){
-    <div class="user" mat-button>
-      <span>{{ user.email || user.username }}</span>
-      <button mat-button color="primary" (click)="logout()">Logout</button>
-    </div>
+  <div class="user" mat-button>
+    <span>{{ user.email || user.username }}</span>
+    <button mat-button color="primary" (click)="logout()">Logout</button>
+  </div>
   }
 </mat-toolbar>

@@ -3,11 +3,10 @@ import { SharedModule } from '../../../shared/shared.module';
 import { LoginComponent } from '../../features/auth/login/login.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../core/services/authentication.service';
-import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [SharedModule, AsyncPipe],
+  imports: [SharedModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
