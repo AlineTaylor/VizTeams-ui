@@ -7,6 +7,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [SharedModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -28,10 +29,10 @@ export class LoginComponent {
 
   login() {
     if (this.loginForm.valid) {
-  const identifier = this.loginForm.value.identifier;
+      const identifier = this.loginForm.value.identifier;
       const password = this.loginForm.value.password;
 
-  this.authService.login(identifier, password).subscribe({
+      this.authService.login(identifier, password).subscribe({
         next: (res: any) => {
           if (res?.token) {
             this.authService.setToken(res.token);
@@ -54,5 +55,4 @@ export class LoginComponent {
     event.stopPropagation();
     this.hide.update((v) => !v);
   }
-}
 }

@@ -4,9 +4,7 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private userSubject = new BehaviorSubject<any | null>(
     this.getUserFromToken()

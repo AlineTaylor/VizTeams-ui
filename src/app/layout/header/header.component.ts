@@ -7,6 +7,7 @@ import { AuthenticationService } from '../../core/services/authentication.servic
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [SharedModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
@@ -24,10 +25,7 @@ export class HeaderComponent {
   openSignup() {
     this.dialog.open(SignupComponent);
   }
-  
-  isLoggedIn() {
-    return this.authService.isLoggedIn();}
-  
+
   logout() {
     this.authService.logout();
   }
