@@ -1,18 +1,59 @@
 <div class="container">
-  <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <div class="form-group">
-      <label for="username">Username or Email</label>
-      <input type="text" formControlName="username" />
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" formControlName="password" />
-    </div>
+  <h2 mat-dialog-title>Sign In</h2>
+  <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+    <mat-dialog-content>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Username or Email</mat-label>
+        <input
+          matInput
+          formControlName="username"
+          placeholder="user@viz.com"
+          autocomplete="username email"
+          required
+        />
+        @if(loginForm.get('username')?.hasError('required')){
+        <mat-error> Username or email is required </mat-error>}
+      </mat-form-field>
 
-    @if(isError) {
-    <p>Username/Email and Password credentials failed. Please try again!</p>
-    }
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hide() ? 'password' : 'text'"
+          formControlName="password"
+          autocomplete="current-password"
+          required
+        />
+        <mat-button
+          mat-icon-button
+          matSuffix
+          type="button"
+          (click)="togglePasswordVisibility($event)"
+          [attr.aria-label]="hide() ? 'Show password' : 'Hide password'"
+          [attr.aria-pressed]="!hide()"
+        >
+          <mat-icon>{{ hide() ? "visibility" : "visibility_off" }}</mat-icon>
+        </mat-button>
+        @if(loginForm.get('password')?.hasError('required')) {
+        <mat-error>Password is required </mat-error>}
+      </mat-form-field>
 
-    <button type="submit" [disabled]="!loginForm.valid">Login</button>
+      @if (isError) {
+      <mat-error>
+        <p>Username/Email and Password credentials failed. Please try again!</p>
+      </mat-error>
+      }
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <button
+        matButton
+        type="submit"
+        mat-raised-button
+        color="primary"
+        [disabled]="!loginForm.valid"
+      >
+        Login
+      </button>
+    </mat-dialog-actions>
   </form>
 </div>

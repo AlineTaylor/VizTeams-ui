@@ -1,39 +1,50 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, signal } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Router } from '@angular/router';
+import { SharedModule } from '../../../../shared/shared.module';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [SharedModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  loginForm:FormGroup = new FormGroup({
+  loginForm: FormGroup = new FormGroup({
     username: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required)
-  })
+    password: new FormControl('', Validators.required),
+  });
 
-  isError:boolean = false;
+  isError: boolean = false;
 
-  constructor(private authService:AuthenticationService, private router:Router) {}
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router
+  ) {}
 
   login() {
-    if(this.loginForm.valid){
+    if (this.loginForm.valid) {
       const username = this.loginForm.value.username;
       const password = this.loginForm.value.password;
 
       this.authService.login(username, password).subscribe({
-        next: (res:any) => {
-          console.log(res)
-          this.router.navigate(['/'])
+        next: (res: any) => {
+          console.log(res);
+          this.router.navigate(['/']);
         },
-        error: (error:any) => {
-          console.log("Error when logging in", error)
+        error: (error: any) => {
+          console.log('Error when logging in', error);
           this.isError = true;
-        }
-      })
+        },
+      });
     }
+  }
+  // Password visibility toggle
+  hide = signal(true);
+  togglePasswordVisibility(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.hide.update((v) => !v);
   }
 }
