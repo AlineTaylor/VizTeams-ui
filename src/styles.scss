@@ -17,12 +17,16 @@
   --viz-success: #{viz.$viz-success};
   --viz-warning: #{viz.$viz-warning};
   --viz-background: #{viz.$viz-background};
+  --white-smoke: #{viz.$white-smoke};
+  --dark-orange: #{viz.$dark-orange};
 
   /* Semantic design tokens (use these!) */
   --color-text: var(--viz-text-color);
   --color-bg: var(--viz-background);
-  --color-accent: var(--viz-purple);
-  --color-accent-alt: var(--viz-orange);
+  --color-secondary-bg: var(--white-smoke);
+  --color-border: var(--dark-orange);
+  --color-accent: var(--viz-orange);
+  --color-accent-alt: var(--viz-purple);
   --color-success: var(--viz-success);
   --color-warning: var(--viz-warning);
   --color-error: var(--viz-red);
@@ -31,10 +35,19 @@
 /* Typography */
 html,
 body {
+  margin: 0;
+  padding: 0;
   color: var(--color-text);
   background-color: var(--color-bg);
   font-family: "Soleto", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.5;
+}
+
+/* Global box-sizing reset*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 /* Ensuring Angular Material inherits the std font color */

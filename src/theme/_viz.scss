@@ -13,6 +13,8 @@ $viz-teal: #01807f;
 $viz-success: #2d8150;
 $viz-warning: #a36114;
 $viz-background: #f9f9f9;
+$white-smoke: #f5f5f5;
+$dark-orange: #cc3e00;
 
 /* Map (for future iteration if needed) */
 $viz-colors: (
@@ -28,4 +30,6 @@ $viz-colors: (
   success: $viz-success,
   warning: $viz-warning,
   background: $viz-background,
+  white-smoke: $white-smoke,
+  dark-orange: $dark-orange,
 );
