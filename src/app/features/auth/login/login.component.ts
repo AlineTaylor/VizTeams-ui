@@ -20,20 +20,25 @@ export class LoginComponent {
   constructor(private authService:AuthenticationService, private router:Router) {}
 
   login() {
-    if(this.loginForm.valid){
-      const username = this.loginForm.value.username;
-      const password = this.loginForm.value.password;
+  if (this.loginForm.valid) {
+    const username = this.loginForm.value.username;
+    const password = this.loginForm.value.password;
 
-      this.authService.login(username, password).subscribe({
-        next: (res:any) => {
-          console.log(res)
-          this.router.navigate(['/'])
-        },
-        error: (error:any) => {
-          console.log("Error when logging in", error)
-          this.isError = true;
-        }
-      })
-    }
+    this.authService.login(username, password).subscribe({
+      next: (res: any) => {
+        console.log("✅ Successful login:", res);
+
+        // 🔑 Save token so isLoggedIn() will return true
+        this.authService.setToken(res.token);
+
+        // Redirect to home/dashboard
+        this.router.navigate(['/']);
+      },
+      error: (error: any) => {
+        console.log("❌ Error when logging in", error);
+        this.isError = true;
+      }
+    });
   }
+}
 }

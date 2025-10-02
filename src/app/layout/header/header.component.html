@@ -3,5 +3,11 @@
     <img src="/vizient-logo-registered.svg" alt="Vizient logo" />
     <span>VizTeams</span>
   </div>
-  <div class="user">UserName</div>
+
+  @if(isLoggedIn()) {
+  <div class="user">
+    <span>UserName</span>
+    <button mat-button (click)="logout()">Logout</button>
+  </div>
+  }
 </mat-toolbar>
