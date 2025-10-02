@@ -3,11 +3,18 @@
     <img src="/vizient-logo-registered.svg" alt="Vizient logo" />
     <span>VizTeams</span>
   </div>
-
-  @if(isLoggedIn()) {
-  <div class="user">
-    <span>UserName</span>
-    <button mat-button (click)="logout()">Logout</button>
+  <!-- "Sign In" and "Sign Up" when not logged in -->
+  @if(!(user$ | async); as noUser){
+  <div class="user" mat-button>
+    <button mat-stroked-button (click)="openDialog()">Sign in</button>
+    <button mat-stroked-button (click)="openSignup()">Sign up</button>
   </div>
   }
+  <!-- Email/username and logout when logged in -->
+  //(isLoggedIn())
+  @if(user$ | async; as user){
+  <div class="user" mat-button>
+    <span>{{ user.email || user.username }}</span>
+    <button mat-button color="primary" (click)="logout()">Logout</button>
+  </div>}
 </mat-toolbar>

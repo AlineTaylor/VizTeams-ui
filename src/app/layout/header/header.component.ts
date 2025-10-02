@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
+import { LoginComponent } from '../../features/auth/login/login.component';
+import { SignupComponent } from '../../features/auth/signup/signup.component';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../core/services/authentication.service';
 
 @Component({
@@ -9,12 +12,22 @@ import { AuthenticationService } from '../../core/services/authentication.servic
   styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  constructor(private authService:AuthenticationService) {  }
+  readonly dialog = inject(MatDialog);
+  private authService = inject(AuthenticationService);
 
-  isLoggedIn() {
-    return this.authService.isLoggedIn();
+  user$ = this.authService.user$;
+
+  openDialog() {
+    this.dialog.open(LoginComponent);
   }
 
+  openSignup() {
+    this.dialog.open(SignupComponent);
+  }
+  
+  isLoggedIn() {
+    return this.authService.isLoggedIn();}
+  
   logout() {
     this.authService.logout();
   }
