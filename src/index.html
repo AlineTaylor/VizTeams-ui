@@ -5,8 +5,6 @@
     <title>VizTeamsUi</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- CANARY: build timestamp will help confirm deployment -->
-    <!-- CANARY-BUILD: {{BUILD_TIMESTAMP_PLACEHOLDER}} -->
     <!-- Material Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,21 +13,8 @@
       rel="stylesheet"
     />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <style>
-      /* Fallback styling if scripts never hydrate */
-      #canary-fallback {
-        font-family: system-ui, Arial, sans-serif;
-        padding: 1rem;
-        background: #222;
-        color: #ffc;
-      }
-    </style>
   </head>
   <body>
-    <div id="canary-fallback">
-      Canary fallback: Angular app has not hydrated yet. If you still see this
-      after a few seconds, scripts didn't load.
-    </div>
     <app-root></app-root>
   </body>
 </html>

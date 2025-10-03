@@ -1,1 +1,0 @@
-PING CHECK - If you can read this at https://vizteams-ui.onrender.com/ping.txt then static file serving works. Build timestamp: 2025-10-02T00:00:00Z
