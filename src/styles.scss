@@ -1,0 +1,77 @@
+/* Global Styles (SCSS) */
+@use "./theme/material-theme"; /* emits Material component styles */
+@use "./theme/viz" as viz; /* single source of truth brand tokens */
+
+/* Raw palette variables (pls avoid directly referencing in components and use semantic tokens below as much as possible) */
+:root {
+  --viz-text-color: rgba(69, 90, 100, 0.87);
+  --viz-purple: #{viz.$viz-purple};
+  --viz-orange: #{viz.$viz-orange};
+  --viz-yellow: #{viz.$viz-yellow};
+  --viz-green: #{viz.$viz-green};
+  --viz-gray: #{viz.$viz-gray};
+  --viz-black: #{viz.$viz-black};
+  --viz-white: #{viz.$viz-white};
+  --viz-red: #{viz.$viz-red};
+  --viz-teal: #{viz.$viz-teal};
+  --viz-success: #{viz.$viz-success};
+  --viz-warning: #{viz.$viz-warning};
+  --viz-background: #{viz.$viz-background};
+  --white-smoke: #{viz.$white-smoke};
+  --dark-orange: #{viz.$dark-orange};
+
+  /* Semantic design tokens (use these!) */
+  --color-text: var(--viz-text-color);
+  --color-text-alt: var(--viz-white);
+  --color-bg: var(--viz-background);
+  --color-bg-alt: var(--white-smoke);
+  --color-border: var(--dark-orange);
+  --color-accent: var(--viz-orange);
+  --color-accent-alt: var(--viz-purple);
+  --color-success: var(--viz-success);
+  --color-warning: var(--viz-warning);
+  --color-error: var(--viz-red);
+}
+
+/* Typography */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-family: "Soleto", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+/* Global box-sizing reset*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Ensuring Angular Material inherits the std font color */
+body,
+.mat-typography,
+.mat-app-background {
+  color: inherit;
+  background: inherit;
+}
+
+/* Utility helper classes for quick and consistent styling*/
+.text-primary {
+  color: var(--color-text) !important;
+}
+.text-accent {
+  color: var(--color-accent) !important;
+}
+.text-success {
+  color: var(--color-success) !important;
+}
+.text-warning {
+  color: var(--color-warning) !important;
+}
+.text-error {
+  color: var(--color-error) !important;
+}
