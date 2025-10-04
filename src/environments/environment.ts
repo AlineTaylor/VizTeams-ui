@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-   // fix prod url later
-  apiUrl: 'http://www.production.com'
+  // Production API base URL (deployed on Render)
+  apiUrl: 'https://vizteams-api-js.onrender.com',
 };
