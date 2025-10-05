@@ -1,0 +1,10 @@
+<mat-card class="team-list-card">
+  <div class="card-header">Teams</div>
+  <div class="teams-scroll">
+    @for (t of teams; track t) {
+      <div class="team-item">{{ t }}</div>
+    } @empty {
+      <div class="empty">No teams yet.</div>
+    }
+  </div>
+</mat-card>

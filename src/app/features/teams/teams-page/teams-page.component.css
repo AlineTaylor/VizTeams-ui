@@ -1,0 +1,17 @@
+.teams-page {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@media (max-width: 1100px) {
+  .teams-page {
+    flex-direction: column;
+  }
+  app-team-list,
+  app-members-panel {
+    width: auto;
+    margin-right: 32px;
+  }
+}

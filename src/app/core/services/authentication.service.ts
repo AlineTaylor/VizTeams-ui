@@ -64,6 +64,7 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem('token');
     this.userSubject.next(null);
-    this.router.navigate(['/login']);
+    // Navigating away to trigger guard/dialog once user logs out
+    this.router.navigate(['/']);
   }
 }
