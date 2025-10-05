@@ -62,8 +62,8 @@ export class AuthenticationService {
   }
 
   logout() {
-    localStorage.removeItem('token');
-    this.userSubject.next(null);
-    this.router.navigate(['/login']);
+  localStorage.removeItem('token');
+  // Just clear session or reload the app
+  window.location.reload();
   }
 }
