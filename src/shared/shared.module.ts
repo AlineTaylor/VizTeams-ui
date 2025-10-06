@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -24,7 +25,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatButtonModule,
     AsyncPipe,
     MatCardModule,
-    MatExpansionModule,
+  MatExpansionModule,
+  MatTooltipModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -36,7 +38,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatButtonModule,
     AsyncPipe,
     MatCardModule,
-    MatExpansionModule,
+  MatExpansionModule,
+  MatTooltipModule,
   ],
 })
 export class SharedModule {}

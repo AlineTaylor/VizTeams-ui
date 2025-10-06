@@ -16,11 +16,11 @@ export class TeamListComponent {
       id: 'cornerstone',
       name: 'Cornerstone',
       members: [
-        { id: 'u1', name: 'Ryan Everett', role: 'Software Engineer' },
+        { id: 'u1', name: 'Ryan Everett', role: 'Software Engineer', avatarUrl: 'https://picsum.photos/seed/ryan/80' },
         { id: 'u2', name: 'Graham Walker', role: 'Software Engineer' },
-        { id: 'u3', name: 'Benjamin Martin', role: 'Software Engineer' },
+        { id: 'u3', name: 'Benjamin Martin', role: 'Software Engineer', avatarUrl: 'https://picsum.photos/seed/benmartin/80' },
         { id: 'u4', name: 'Brandon Clark', role: 'Software Engineer' },
-        { id: 'u5', name: 'Sidhant Amatya', role: 'Quality Engineer' },
+        { id: 'u5', name: 'Sidhant Amatya', role: 'Quality Engineer', avatarUrl: 'https://picsum.photos/seed/sidhant/80' },
       ],
     },
   ];

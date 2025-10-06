@@ -40,57 +40,67 @@
 }
 
 /* Expansion panel*/
-.team-members {
+/* Avatar strip inside expansion panel */
+.team-members-strip {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px 8px 16px 8px;
-}
-
-.member-row {
-  display: flex;
+  flex-direction: row;
   align-items: center;
+  padding: 8px 8px 12px 8px;
   gap: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
+  background: linear-gradient(#eee, #dcdcdc);
+  border-top: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
 }
-.member-row:hover {
-  background: var(--color-bg-alt);
+.team-members-strip .avatars {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-
-.avatar {
+.team-members-strip .avatars::-webkit-scrollbar {
+  display: none;
+}
+.avatar-tile {
   width: 40px;
   height: 40px;
-  flex: 0 0 40px;
-  border-radius: 4px;
-  background: var(--color-bg-alt);
+  border-radius: 2px;
+  overflow: hidden;
+  background: #ccc;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 600;
-  font-size: 0.9rem;
-  overflow: hidden;
+  cursor: pointer;
+  flex: 0 0 40px;
+  position: relative;
 }
-.avatar img {
+.avatar-tile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
-.avatar.placeholder {
-  color: var(--color-text);
-  opacity: 0.7;
+.avatar-tile:hover {
+  outline: 2px solid var(--color-border-alt);
 }
-
-.info {
+.more-count {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
   display: flex;
-  flex-direction: column;
-}
-.info .name {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-.info .role {
+  align-items: center;
+  justify-content: center;
   font-size: 0.75rem;
-  opacity: 0.75;
+  font-weight: 600;
+  background: #fafafa;
+  border: 1px dashed var(--color-border);
+  border-radius: 2px;
+}
+.count {
+  margin-left: auto;
+  font-size: 0.65rem;
+  opacity: 0.7;
+  padding-right: 4px;
 }
