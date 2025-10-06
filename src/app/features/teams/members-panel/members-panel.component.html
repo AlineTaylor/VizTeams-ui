@@ -1,3 +1,26 @@
 <mat-card class="members-card">
-  <div class="members-placeholder">{{ message }}</div>
+  @if (hasTeam) {
+  <div class="panel-header">
+    <h3 class="team-name">{{ team!.name }}</h3>
+  </div>
+  <div class="members-grid">
+    @for (m of team!.members; track m.id) {
+    <div class="member-tile">
+      <!-- TODO Update with supplied default avatar piture (upcoming story) -->
+      @if (m.avatarUrl) {
+      <img class="avatar" [src]="m.avatarUrl" [alt]="m.name" /> } @else {
+      <div class="avatar placeholder">{{ m.name.charAt(0) }}</div>
+      }
+      <div class="meta">
+        <div class="name">{{ m.name }}</div>
+        <div class="role">{{ m.role }}</div>
+      </div>
+    </div>
+    } @empty {
+    <div class="empty">No members.</div>
+    }
+  </div>
+  } @else {
+  <div class="members-placeholder">Select a team to view members.</div>
+  }
 </mat-card>

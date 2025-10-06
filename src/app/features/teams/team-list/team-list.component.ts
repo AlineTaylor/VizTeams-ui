@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
+import { Team } from '../../../../shared/models/team.models';
 
 @Component({
   selector: 'app-team-list',
@@ -11,6 +10,30 @@ import { SharedModule } from '../../../../shared/shared.module';
   styleUrl: './team-list.component.css',
 })
 export class TeamListComponent {
-  // TODO placeholder for now, wire to service later
-  teams: string[] = [];
+  // TODO Hard-coded single team for now, structure ready for CRUD service wiring
+  teams: Team[] = [
+    {
+      id: 'cornerstone',
+      name: 'Cornerstone',
+      members: [
+        { id: 'u1', name: 'Ryan Everett', role: 'Software Engineer' },
+        { id: 'u2', name: 'Graham Walker', role: 'Software Engineer' },
+        { id: 'u3', name: 'Benjamin Martin', role: 'Software Engineer' },
+        { id: 'u4', name: 'Brandon Clark', role: 'Software Engineer' },
+        { id: 'u5', name: 'Sidhant Amatya', role: 'Quality Engineer' },
+      ],
+    },
+  ];
+
+  panelOpenState: Record<string, boolean> = {};
+
+  toggle(teamId: string) {
+    this.panelOpenState[teamId] = !this.panelOpenState[teamId];
+  }
+
+  @Output() selectTeam = new EventEmitter<Team>();
+
+  onSelect(team: Team) {
+    this.selectTeam.emit(team);
+  }
 }

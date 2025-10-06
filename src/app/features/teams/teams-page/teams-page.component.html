@@ -1,4 +1,4 @@
 <div class="teams-page">
-  <app-team-list />
-  <app-members-panel />
+  <app-team-list (selectTeam)="handleSelect($event)" />
+  <app-members-panel [team]="selectedTeam" />
 </div>

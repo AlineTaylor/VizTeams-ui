@@ -1,8 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { Component, Input } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
-
+import { Team } from '../../../../shared/models/team.models';
 @Component({
   selector: 'app-members-panel',
   standalone: true,
@@ -11,6 +9,8 @@ import { SharedModule } from '../../../../shared/shared.module';
   styleUrl: './members-panel.component.css',
 })
 export class MembersPanelComponent {
-  // TODO placeholder! Set up expanded view later (next story)
-  message = 'Select a team to view members.';
+  @Input() team: Team | null = null;
+  get hasTeam() {
+    return !!this.team;
+  }
 }
