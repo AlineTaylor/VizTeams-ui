@@ -48,10 +48,13 @@ export class AuthenticationService {
   setToken(token: string) {
     localStorage.setItem('token', token);
     this.userSubject.next(this.getUserFromToken());
-    // After token is set, navigate to the stored redirect target if there was one (currently set to be the teams layout page by the guard)
+    // After token is set, navigate to the stored redirect target if there was one (currently set to be the teams layout page)
     const target = this.consumeRedirect();
     if (target) {
       this.router.navigateByUrl(target);
+    } else {
+      // Default post-auth destination when user logged in from public landing or header
+      this.router.navigate(['/teams']);
     }
   }
 
