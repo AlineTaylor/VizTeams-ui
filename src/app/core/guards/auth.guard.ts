@@ -1,16 +1,32 @@
-// import { CanActivateFn, Router } from '@angular/router';
-// import { AuthenticationService } from '../services/authentication.service';
-// import { inject } from '@angular/core';
+import { CanActivateFn } from '@angular/router';
+import { AuthenticationService } from '../services/authentication.service';
+import { inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../../features/auth/login/login.component';
 
-// export const authGuard: CanActivateFn = (route, state) => {
+// TRack dialog instances to avoid repeated dialogs
+let loginDialogOpen = false;
 
-//   const authService = inject(AuthenticationService)
-//   const router = inject(Router)
+export const authGuard: CanActivateFn = () => {
+  const authService = inject(AuthenticationService);
 
-//   if(authService.isLoggedIn()) {
-//     return true;
-//   } else {
-//     router.navigate(['/login'])
-//     return false;
-//   }
-// };
+  if (authService.isLoggedIn()) {
+    return true;
+  }
+
+  const dialog = inject(MatDialog);
+
+  if (!loginDialogOpen) {
+    loginDialogOpen = true;
+    const ref = dialog.open(LoginComponent, {
+      disableClose: true,
+      width: '400px',
+    });
+    ref.afterClosed().subscribe(() => {
+      loginDialogOpen = false;
+      // Manual refresh/navigate away if a user logged in via dialog is still on a protected route that failed earlier
+    });
+  }
+
+  return false; // block initial navigation until authenticated
+};

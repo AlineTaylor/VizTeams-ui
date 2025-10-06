@@ -62,8 +62,9 @@ export class AuthenticationService {
   }
 
   logout() {
-  localStorage.removeItem('token');
-  // Just clear session or reload the app
-  window.location.reload();
+    localStorage.removeItem('token');
+    this.userSubject.next(null);
+    // Navigating away to trigger guard/dialog once user logs out
+    this.router.navigate(['/']);
   }
 }
