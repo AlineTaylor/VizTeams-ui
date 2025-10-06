@@ -1,16 +1,38 @@
-import { CanActivateFn, Router } from '@angular/router';
+import { CanActivateFn, RouterStateSnapshot, Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { LoginComponent } from '../../features/auth/login/login.component';
 
-export const authGuard: CanActivateFn = (route, state) => {
+// TRack dialog instances to avoid repeated dialogs
+let loginDialogOpen = false;
 
-  const authService = inject(AuthenticationService)
-  const router = inject(Router)
+export const authGuard: CanActivateFn = (route, state: RouterStateSnapshot) => {
+  const authService = inject(AuthenticationService);
 
-  if(authService.isLoggedIn()) {
+  if (authService.isLoggedIn()) {
     return true;
-  } else {
-    router.navigate(['/login'])
-    return false;
   }
+
+  const dialog = inject(MatDialog);
+  const router = inject(Router);
+
+  if (!loginDialogOpen) {
+    // store intended route so teams layout page is automatically displayed without needing to manually refresh
+    authService.setPendingRedirect(state.url || '/teams');
+    loginDialogOpen = true;
+    const ref = dialog.open(LoginComponent, {
+      width: '400px',
+    });
+    ref.afterClosed().subscribe(() => {
+      loginDialogOpen = false;
+      // Manual refresh/navigate away if a user logged in via dialog is still on a protected route that failed earlier
+      // If user closes dialog without authenticating, send them to landing page
+      if (!authService.isLoggedIn()) {
+        router.navigate(['/']);
+      }
+    });
+  }
+
+  return false; // block initial navigation until authenticated
 };

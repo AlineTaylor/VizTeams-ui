@@ -14,6 +14,16 @@ export class AuthenticationService {
   // request will now be sent to the API
   constructor(private http: HttpClient, private router: Router) {}
 
+  private pendingRedirect: string | null = null;
+  setPendingRedirect(url: string) {
+    this.pendingRedirect = url;
+  }
+  consumeRedirect(): string | null {
+    const u = this.pendingRedirect;
+    this.pendingRedirect = null;
+    return u;
+  }
+
   login(identifier: string, password: string) {
     const isEmail = identifier.includes('@');
     const body: any = { password };
@@ -38,6 +48,14 @@ export class AuthenticationService {
   setToken(token: string) {
     localStorage.setItem('token', token);
     this.userSubject.next(this.getUserFromToken());
+    // After token is set, navigate to the stored redirect target if there was one (currently set to be the teams layout page)
+    const target = this.consumeRedirect();
+    if (target) {
+      this.router.navigateByUrl(target);
+    } else {
+      // Default post-auth destination when user logged in from public landing or header
+      this.router.navigate(['/teams']);
+    }
   }
 
   getToken() {
@@ -64,6 +82,7 @@ export class AuthenticationService {
   logout() {
     localStorage.removeItem('token');
     this.userSubject.next(null);
-    this.router.navigate(['/login']);
+    // Navigate to public landing page, user is automatically removed from protected view
+    this.router.navigate(['/']);
   }
 }

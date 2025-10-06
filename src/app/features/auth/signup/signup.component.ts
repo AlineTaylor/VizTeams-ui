@@ -2,7 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SharedModule } from '../../../../shared/shared.module';
 import { AuthenticationService } from '../../../core/services/authentication.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { LoginComponent } from '../login/login.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,6 +16,7 @@ import { Router } from '@angular/router';
 export class SignupComponent {
   private authService = inject(AuthenticationService);
   private dialogRef = inject(MatDialogRef<SignupComponent>);
+  private dialog = inject(MatDialog);
   private router = inject(Router);
 
   signupForm: FormGroup = new FormGroup({
@@ -36,7 +38,7 @@ export class SignupComponent {
             this.authService.setToken(res.token);
           }
           this.dialogRef.close();
-          this.router.navigate(['/']);
+          // Redirect (if any) handled by AuthenticationService setToken side-effect
         },
         error: (err: any) => {
           console.error('Signup failed', err);
@@ -52,5 +54,10 @@ export class SignupComponent {
     event.preventDefault();
     event.stopPropagation();
     this.hide.update((v) => !v);
+  }
+
+  openLogin() {
+    this.dialogRef.close();
+    this.dialog.open(LoginComponent, { width: '400px' });
   }
 }

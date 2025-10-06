@@ -8,6 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [],
@@ -21,6 +24,9 @@ import { AsyncPipe } from '@angular/common';
     MatIconModule,
     MatButtonModule,
     AsyncPipe,
+    MatCardModule,
+  MatExpansionModule,
+  MatTooltipModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -31,6 +37,9 @@ import { AsyncPipe } from '@angular/common';
     MatIconModule,
     MatButtonModule,
     AsyncPipe,
+    MatCardModule,
+  MatExpansionModule,
+  MatTooltipModule,
   ],
 })
 export class SharedModule {}

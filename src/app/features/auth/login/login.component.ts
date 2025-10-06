@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../../core/services/authentication.service';
 import { Router } from '@angular/router';
 import { SharedModule } from '../../../../shared/shared.module';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SignupComponent } from '../signup/signup.component';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent {
   isError: boolean = false;
 
   private dialogRef = inject(MatDialogRef<LoginComponent>);
+  private dialog = inject(MatDialog);
 
   constructor(
     private authService: AuthenticationService,
@@ -38,7 +40,6 @@ export class LoginComponent {
             this.authService.setToken(res.token);
           }
           this.dialogRef.close();
-          this.router.navigate(['/']);
         },
         error: (error: any) => {
           console.log('Error when logging in', error);
@@ -54,5 +55,10 @@ export class LoginComponent {
     event.preventDefault();
     event.stopPropagation();
     this.hide.update((v) => !v);
+  }
+
+  openSignup() {
+    this.dialogRef.close();
+    this.dialog.open(SignupComponent, { width: '420px' });
   }
 }
