@@ -3,7 +3,7 @@
   flex-direction: column;
   flex: 1 1 0;
   min-width: 0;
-  height: calc(100vh - 120px); /* full-height minus header */
+  height: calc(100vh - 120px);
   margin: 32px 0 32px 32px;
   padding: 0;
   background: var(--color-bg);
