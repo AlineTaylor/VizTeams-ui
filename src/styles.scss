@@ -76,3 +76,20 @@ body,
 .text-error {
   color: var(--color-error) !important;
 }
+
+::ng-deep .custom-add-team-dialog .mat-mdc-dialog-container {
+  width: 700px !important;
+  max-width: 90vw !important;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+::ng-deep .custom-add-team-dialog .mdc-dialog__surface {
+  width: 100%;
+  max-width: 700px;
+}
+
+::ng-deep .cdk-overlay-pane.custom-add-team-dialog {
+  align-items: flex-start !important;
+  margin-top: 10vh;
+}

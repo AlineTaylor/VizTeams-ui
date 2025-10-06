@@ -1,25 +1,50 @@
 <h2 mat-dialog-title>Add New Team</h2>
 
-<mat-dialog-content>
-  <form [formGroup]="form">
-    <mat-form-field appearance="outline" class="full-width">
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="form" class="dialog-form">
+    <!-- Team Name -->
+    <mat-form-field appearance="fill" class="full-width">
       <mat-label>Team Name</mat-label>
-      <input matInput formControlName="name" required />
-      @if(form.get('name')?.hasError('required')){
+      <input
+        matInput
+        formControlName="name"
+        required
+        placeholder="Enter team name"
+      />
+      @if (form.get('name')?.touched && form.get('name')?.hasError('required'))
+      {
       <mat-error>Team name is required</mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Team Description -->
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Team Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Enter a brief description..."
+        rows="3"
+        maxlength="250"
+      ></textarea>
+      @if (form.get('description')?.hasError('maxlength')) {
+      <mat-error>Maximum 250 characters</mat-error>
       }
     </mat-form-field>
   </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-stroked-button class="cancel-btn" (click)="cancel()">
+    Cancel
+  </button>
   <button
     mat-raised-button
-    color="primary"
+    class="submit-btn"
     (click)="save()"
     [disabled]="!form.valid"
+    [ngClass]="{ active: form.valid }"
   >
-    Save
+    Submit
   </button>
 </mat-dialog-actions>

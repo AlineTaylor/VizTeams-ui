@@ -41,19 +41,21 @@ export class TeamListComponent {
     this.selectTeam.emit(team);
   }
 
-  openAddTeamDialog() {
-    const dialogRef = this.dialog.open(AddTeamDialogComponent, {
-      width: '400px',
-    });
+openAddTeamDialog() {
+  const dialogRef = this.dialog.open(AddTeamDialogComponent, {
+    width: '700px',
+    maxWidth: '90vw',
+    panelClass: 'custom-add-team-dialog',
+  });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.name) {
-        this.teams.push({
-          id: crypto.randomUUID(),
-          name: result.name,
-          members: [],
-        });
-      }
-    });
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result?.name) {
+      this.teams.push({
+        id: crypto.randomUUID(),
+        name: result.name,
+        members: [],
+      });
+    }
+  });
   }
 }
