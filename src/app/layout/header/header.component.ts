@@ -19,11 +19,11 @@ export class HeaderComponent {
   user$ = this.authService.user$;
 
   openDialog() {
-    this.dialog.open(LoginComponent);
+    this.dialog.open(LoginComponent, { width: '400px' });
   }
 
   openSignup() {
-    this.dialog.open(SignupComponent);
+    this.dialog.open(SignupComponent, { width: '420px' });
   }
 
   logout() {
