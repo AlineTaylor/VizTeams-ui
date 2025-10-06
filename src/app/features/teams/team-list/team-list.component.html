@@ -1,5 +1,8 @@
 <mat-card class="team-list-card">
-  <div class="card-header">Teams</div>
+  <div class="card-header">
+    <span>Teams</span>
+  </div>
+
   <div class="teams-scroll">
     <mat-accordion multi>
       @for (team of teams; track team.id) {
@@ -10,16 +13,16 @@
       >
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.name }}</mat-panel-title>
-          <mat-panel-description
-            >{{ team.members.length }} member{{
+          <mat-panel-description>
+            {{ team.members.length }} member{{
               team.members.length === 1 ? "" : "s"
-            }}</mat-panel-description
-          >
+            }}
+          </mat-panel-description>
         </mat-expansion-panel-header>
 
         <div class="team-members-strip">
           <div class="avatars">
-            @for (m of team.members.slice(0,12); track m.id) {
+            @for (m of team.members.slice(0, 12); track m.id) {
             <div
               class="avatar-tile"
               matTooltip="{{ m.name }}"
@@ -47,4 +50,15 @@
       }
     </mat-accordion>
   </div>
+
+  <div class="bottom-divider"></div>
+  <button
+    mat-icon-button
+    class="add-team-square"
+    (click)="openAddTeamDialog()"
+    matTooltip="Add Team"
+    matTooltipPosition="above"
+  >
+    +
+  </button>
 </mat-card>

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { Team } from '../../../../shared/models/team.models';
+import { MatDialog } from '@angular/material/dialog';
+import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 
 @Component({
   selector: 'app-team-list',
@@ -10,6 +12,8 @@ import { Team } from '../../../../shared/models/team.models';
   styleUrl: './team-list.component.css',
 })
 export class TeamListComponent {
+  constructor(private dialog: MatDialog) {}
+
   // TODO Hard-coded single team for now, structure ready for CRUD service wiring
   teams: Team[] = [
     {
@@ -35,5 +39,21 @@ export class TeamListComponent {
 
   onSelect(team: Team) {
     this.selectTeam.emit(team);
+  }
+
+  openAddTeamDialog() {
+    const dialogRef = this.dialog.open(AddTeamDialogComponent, {
+      width: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.name) {
+        this.teams.push({
+          id: crypto.randomUUID(),
+          name: result.name,
+          members: [],
+        });
+      }
+    });
   }
 }

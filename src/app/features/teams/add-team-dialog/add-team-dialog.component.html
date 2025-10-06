@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Add New Team</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Team Name</mat-label>
+      <input matInput formControlName="name" required />
+      @if(form.get('name')?.hasError('required')){
+      <mat-error>Team name is required</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+    [disabled]="!form.valid"
+  >
+    Save
+  </button>
+</mat-dialog-actions>
