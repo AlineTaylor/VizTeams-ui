@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { Team } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
+import { TeamService } from '../../../core/services/team.service';
 
 @Component({
   selector: 'app-team-list',
@@ -11,51 +12,63 @@ import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.compo
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css',
 })
-export class TeamListComponent {
-  constructor(private dialog: MatDialog) {}
-
-  // TODO Hard-coded single team for now, structure ready for CRUD service wiring
-  teams: Team[] = [
-    {
-      id: 'cornerstone',
-      name: 'Cornerstone',
-      members: [
-        { id: 'u1', name: 'Ryan Everett', role: 'Software Engineer', avatarUrl: 'https://picsum.photos/seed/ryan/80' },
-        { id: 'u2', name: 'Graham Walker', role: 'Software Engineer' },
-        { id: 'u3', name: 'Benjamin Martin', role: 'Software Engineer', avatarUrl: 'https://picsum.photos/seed/benmartin/80' },
-        { id: 'u4', name: 'Brandon Clark', role: 'Software Engineer' },
-        { id: 'u5', name: 'Sidhant Amatya', role: 'Quality Engineer', avatarUrl: 'https://picsum.photos/seed/sidhant/80' },
-      ],
-    },
-  ];
-
+export class TeamListComponent implements OnInit {
+  teams: Team[] = [];
   panelOpenState: Record<string, boolean> = {};
+  selectedTeam: Team | null = null; // 👈 track currently selected team
+
+  @Output() selectTeam = new EventEmitter<Team>();
+
+  constructor(private dialog: MatDialog, private teamService: TeamService) {}
+
+  ngOnInit() {
+    this.teamService.teams$.subscribe((teams) => (this.teams = teams));
+  }
 
   toggle(teamId: string) {
     this.panelOpenState[teamId] = !this.panelOpenState[teamId];
   }
 
-  @Output() selectTeam = new EventEmitter<Team>();
-
   onSelect(team: Team) {
     this.selectTeam.emit(team);
+    this.selectedTeam = team;
   }
 
-openAddTeamDialog() {
-  const dialogRef = this.dialog.open(AddTeamDialogComponent, {
-    width: '700px',
-    maxWidth: '90vw',
-    panelClass: 'custom-add-team-dialog',
-  });
+  onClose(team: Team) {
+  this.panelOpenState[team.id] = false;
+  if (this.selectedTeam?.id === team.id) {
+    this.selectedTeam = null;
+  }
+}
 
-  dialogRef.afterClosed().subscribe((result) => {
-    if (result?.name) {
-      this.teams.push({
-        id: crypto.randomUUID(),
-        name: result.name,
-        members: [],
-      });
+
+  openAddTeamDialog() {
+    const dialogRef = this.dialog.open(AddTeamDialogComponent, {
+      width: '700px',
+      maxWidth: '90vw',
+      panelClass: 'custom-add-team-dialog',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.name) {
+        const newTeam: Team = {
+          id: crypto.randomUUID(),
+          name: result.name,
+          members: [],
+        };
+        this.teamService.addTeam(newTeam);
+      }
+    });
+  }
+
+  deleteSelectedTeam() {
+    if (!this.selectedTeam) return;
+    const confirmDelete = confirm(
+      `Are you sure you want to delete "${this.selectedTeam.name}"?`
+    );
+    if (confirmDelete) {
+      this.teamService.deleteTeam(this.selectedTeam.id);
+      this.selectedTeam = null;
     }
-  });
   }
 }
