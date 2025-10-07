@@ -5,48 +5,45 @@
 
   <div class="teams-scroll">
     <mat-accordion multi>
-      @for (team of teams; track team.id) {
+      @for (team of teams; track team._id) {
       <mat-expansion-panel
-        [expanded]="panelOpenState[team.id]"
-        (opened)="panelOpenState[team.id] = true; onSelect(team)"
+        [expanded]="panelOpenState[team._id!]"
+        (opened)="panelOpenState[team._id!] = true; onSelect(team)"
         (closed)="onClose(team)"
       >
         <mat-expansion-panel-header>
-          <mat-panel-title>{{ team.name }}</mat-panel-title>
+          <mat-panel-title>{{ team.teamName }}</mat-panel-title>
           <mat-panel-description>
             {{ team.members.length }} member{{
-              team.members.length === 1 ? "" : "s"
+              team.members.length === 1 ? '' : 's'
             }}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <div class="team-members-strip">
-          <div class="avatars">
-            @for (m of team.members.slice(0, 12); track m.id) {
-            <div
-              class="avatar-tile"
-              matTooltip="{{ m.name }}"
-              matTooltipPosition="above"
-            >
-              <img [src]="m.avatarUrl || 'avatar.png'" [alt]="m.name" />
-            </div>
-            } @empty {
-            <div class="empty">No members.</div>
-            } @if (team.members.length > 12) {
-            <div
-              class="more-count"
-              matTooltip="{{ team.members.length - 12 }} more"
-              matTooltipPosition="above"
-            >
-              +{{ team.members.length - 12 }}
-            </div>
-            }
+        <!-- Team Description -->
+        @if (team.description) {
+          <div class="team-description">
+            <strong>Description:</strong> {{ team.description }}
           </div>
-          <div class="count">{{ team.members.length }}/12</div>
+        }
+
+        <!-- Team Members -->
+        <div class="team-members-strip">
+          @if (team.members.length > 0) {
+            <ul class="member-list">
+              @for (m of team.members; track m._id) {
+                <li>
+                  <strong>{{ m.name }}</strong> — <em>{{ m.title }}</em>
+                </li>
+              }
+            </ul>
+          } @else {
+            <div class="empty">No members listed.</div>
+          }
         </div>
       </mat-expansion-panel>
       } @empty {
-      <div class="empty">No teams yet.</div>
+      <div class="empty">No teams found.</div>
       }
     </mat-accordion>
   </div>
@@ -54,17 +51,17 @@
   <div class="bottom-divider"></div>
 
   @if (selectedTeam) {
-  <button
-    mat-icon-button
-    color="warn"
-    class="add-team-square"
-    style="right: 70px"
-    (click)="deleteSelectedTeam()"
-    matTooltip="Delete Selected Team"
-    matTooltipPosition="above"
-  >
-    <span style="font-size: 20px; font-weight: bold">×</span>
-  </button>
+    <button
+      mat-icon-button
+      color="warn"
+      class="add-team-square"
+      style="right: 70px"
+      (click)="deleteSelectedTeam()"
+      matTooltip="Delete Selected Team"
+      matTooltipPosition="above"
+    >
+      <span style="font-size: 20px; font-weight: bold">×</span>
+    </button>
   }
 
   <button

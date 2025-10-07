@@ -1,26 +1,30 @@
 <mat-card class="members-card">
-  @if (hasTeam) {
+  @if (displayMembers.length > 0) {
   <div class="panel-header">
-    <h3 class="team-name">{{ team!.name }}</h3>
+    @if (hasTeam) {
+    <h3 class="team-name">{{ team!.teamName }}</h3>
+    } @else {
+    <h3 class="team-name">All Members</h3>
+    }
   </div>
+
   <div class="members-grid">
-    @for (m of team!.members; track m.id) {
+    @for (m of displayMembers; track m.name) {
     <div class="member-tile">
-      <!-- TODO Update with supplied default avatar piture (upcoming story) -->
-      @if (m.avatarUrl) {
-      <img class="avatar" [src]="m.avatarUrl" [alt]="m.name" /> } @else {
       <div class="avatar placeholder">{{ m.name.charAt(0) }}</div>
-      }
       <div class="meta">
         <div class="name">{{ m.name }}</div>
-        <div class="role">{{ m.role }}</div>
+        <div class="role">{{ m.title }}</div>
+        @if (!hasTeam) {
+        <div class="team">({{ m.teamName }})</div>
+        }
       </div>
     </div>
     } @empty {
-    <div class="empty">No members.</div>
+    <div class="empty">No members found.</div>
     }
   </div>
   } @else {
-  <div class="members-placeholder">Select a team to view members.</div>
+  <div class="members-placeholder">No members available.</div>
   }
 </mat-card>

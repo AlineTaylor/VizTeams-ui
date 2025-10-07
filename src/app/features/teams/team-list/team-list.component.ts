@@ -15,13 +15,14 @@ import { TeamService } from '../../../core/services/team.service';
 export class TeamListComponent implements OnInit {
   teams: Team[] = [];
   panelOpenState: Record<string, boolean> = {};
-  selectedTeam: Team | null = null; // 👈 track currently selected team
+  selectedTeam: Team | null = null;
 
   @Output() selectTeam = new EventEmitter<Team>();
 
   constructor(private dialog: MatDialog, private teamService: TeamService) {}
 
   ngOnInit() {
+    // Subscribe to backend-loaded teams
     this.teamService.teams$.subscribe((teams) => (this.teams = teams));
   }
 
@@ -35,12 +36,13 @@ export class TeamListComponent implements OnInit {
   }
 
   onClose(team: Team) {
-  this.panelOpenState[team.id] = false;
-  if (this.selectedTeam?.id === team.id) {
-    this.selectedTeam = null;
+    if (team._id) {
+      this.panelOpenState[team._id] = false;
+      if (this.selectedTeam?._id === team._id) {
+        this.selectedTeam = null;
+      }
+    }
   }
-}
-
 
   openAddTeamDialog() {
     const dialogRef = this.dialog.open(AddTeamDialogComponent, {
@@ -50,10 +52,10 @@ export class TeamListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.name) {
+      if (result?.teamName && result?.description) {
         const newTeam: Team = {
-          id: crypto.randomUUID(),
-          name: result.name,
+          teamName: result.teamName,
+          description: result.description,
           members: [],
         };
         this.teamService.addTeam(newTeam);
@@ -62,12 +64,12 @@ export class TeamListComponent implements OnInit {
   }
 
   deleteSelectedTeam() {
-    if (!this.selectedTeam) return;
+    if (!this.selectedTeam?._id) return;
     const confirmDelete = confirm(
-      `Are you sure you want to delete "${this.selectedTeam.name}"?`
+      `Are you sure you want to delete "${this.selectedTeam.teamName}"?`
     );
     if (confirmDelete) {
-      this.teamService.deleteTeam(this.selectedTeam.id);
+      this.teamService.deleteTeam(this.selectedTeam._id);
       this.selectedTeam = null;
     }
   }

@@ -1,4 +1,13 @@
 <div class="teams-page">
-  <app-team-list (selectTeam)="handleSelect($event)" />
-  <app-members-panel [team]="selectedTeam" />
+  <!-- Left: Team List -->
+  <app-team-list
+    (selectTeam)="handleSelect($event)"
+    #teamList
+  ></app-team-list>
+
+  <!-- Right: Members Panel -->
+  <app-members-panel
+    [team]="selectedTeam"
+    [allTeams]="teamList.teams"
+  ></app-members-panel>
 </div>
