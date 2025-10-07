@@ -15,6 +15,7 @@ import { TeamService } from '../../../core/services/team.service';
 export class TeamListComponent implements OnInit {
   teams: Team[] = [];
   panelOpenState: Record<string, boolean> = {};
+  selectedTeam: Team | null = null; // 👈 track currently selected team
 
   @Output() selectTeam = new EventEmitter<Team>();
 
@@ -30,7 +31,16 @@ export class TeamListComponent implements OnInit {
 
   onSelect(team: Team) {
     this.selectTeam.emit(team);
+    this.selectedTeam = team;
   }
+
+  onClose(team: Team) {
+  this.panelOpenState[team.id] = false;
+  if (this.selectedTeam?.id === team.id) {
+    this.selectedTeam = null;
+  }
+}
+
 
   openAddTeamDialog() {
     const dialogRef = this.dialog.open(AddTeamDialogComponent, {
@@ -49,5 +59,16 @@ export class TeamListComponent implements OnInit {
         this.teamService.addTeam(newTeam);
       }
     });
+  }
+
+  deleteSelectedTeam() {
+    if (!this.selectedTeam) return;
+    const confirmDelete = confirm(
+      `Are you sure you want to delete "${this.selectedTeam.name}"?`
+    );
+    if (confirmDelete) {
+      this.teamService.deleteTeam(this.selectedTeam.id);
+      this.selectedTeam = null;
+    }
   }
 }

@@ -9,7 +9,7 @@
       <mat-expansion-panel
         [expanded]="panelOpenState[team.id]"
         (opened)="panelOpenState[team.id] = true; onSelect(team)"
-        (closed)="panelOpenState[team.id] = false"
+        (closed)="onClose(team)"
       >
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.name }}</mat-panel-title>
@@ -52,6 +52,21 @@
   </div>
 
   <div class="bottom-divider"></div>
+
+  @if (selectedTeam) {
+  <button
+    mat-icon-button
+    color="warn"
+    class="add-team-square"
+    style="right: 70px"
+    (click)="deleteSelectedTeam()"
+    matTooltip="Delete Selected Team"
+    matTooltipPosition="above"
+  >
+    <span style="font-size: 20px; font-weight: bold">×</span>
+  </button>
+  }
+
   <button
     mat-icon-button
     class="add-team-square"

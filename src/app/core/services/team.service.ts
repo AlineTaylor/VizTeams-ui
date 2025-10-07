@@ -4,33 +4,50 @@ import { Team } from '../../../shared/models/team.models';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
+  private readonly STORAGE_KEY = 'vizteams_teams';
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
 
   constructor() {
-    const fallback = this.getFallbackTeams();
-    this.teamsSubject.next(fallback);
+    // ✅ Try to load saved teams from localStorage
+    const saved = localStorage.getItem(this.STORAGE_KEY);
+
+    if (saved) {
+      console.log('📦 Loaded teams from localStorage');
+      this.teamsSubject.next(JSON.parse(saved));
+    } else {
+      console.log('⚙️ No saved data, using fallback');
+      const fallback = this.getFallbackTeams();
+      this.teamsSubject.next(fallback);
+      this.saveToLocalStorage(fallback);
+    }
   }
 
-  /** Fetch all teams (later will pull from API) */
+  /** Returns all teams as observable */
   getTeams(): Observable<Team[]> {
     return of(this.teamsSubject.value);
   }
 
-  /** Add a team and update everyone subscribed */
+  /** Add a new team */
   addTeam(newTeam: Team): void {
-    const current = this.teamsSubject.value;
-    const updated = [...current, newTeam];
+    const updated = [...this.teamsSubject.value, newTeam];
     this.teamsSubject.next(updated);
+    this.saveToLocalStorage(updated); // ✅ persist
   }
 
-  /** Optional: Delete a team by id */
+  /** Delete a team */
   deleteTeam(id: string): void {
     const updated = this.teamsSubject.value.filter((t) => t.id !== id);
     this.teamsSubject.next(updated);
+    this.saveToLocalStorage(updated); // ✅ persist
   }
 
-  /** Temporary hardcoded team */
+  /** Helper: save to localStorage */
+  private saveToLocalStorage(teams: Team[]) {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(teams));
+  }
+
+  /** Temporary hardcoded Cornerstone team */
   private getFallbackTeams(): Team[] {
     return [
       {
