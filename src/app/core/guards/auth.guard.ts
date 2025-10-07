@@ -21,9 +21,7 @@ export const authGuard: CanActivateFn = (route, state: RouterStateSnapshot) => {
     // store intended route so teams layout page is automatically displayed without needing to manually refresh
     authService.setPendingRedirect(state.url || '/teams');
     loginDialogOpen = true;
-    const ref = dialog.open(LoginComponent, {
-      width: '400px',
-    });
+    const ref = dialog.open(LoginComponent);
     ref.afterClosed().subscribe(() => {
       loginDialogOpen = false;
       // Manual refresh/navigate away if a user logged in via dialog is still on a protected route that failed earlier

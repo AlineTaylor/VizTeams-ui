@@ -1,0 +1,51 @@
+.dialog-content {
+  padding-top: 8px;
+  overflow: visible;
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.cancel-btn {
+  color: #555;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+.cancel-btn:hover {
+  color: #333;
+}
+
+.submit-btn {
+  border: 1px solid #ccc;
+  background-color: white;
+  color: #555;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #f3f3f3;
+}
+
+.submit-btn.active {
+  background-color: #5f7682;
+  color: white;
+  border-color: #5f7682;
+}
+.submit-btn.active:hover {
+  background-color: #4d626d;
+  transform: translateY(-1px);
+}
+
+mat-dialog-actions {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: none;
+}

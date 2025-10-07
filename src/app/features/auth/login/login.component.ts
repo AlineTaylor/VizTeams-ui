@@ -11,7 +11,7 @@ import { SignupComponent } from '../signup/signup.component';
   standalone: true,
   imports: [SharedModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: '../auth-dialog.css',
 })
 export class LoginComponent {
   loginForm: FormGroup = new FormGroup({
@@ -59,6 +59,6 @@ export class LoginComponent {
 
   openSignup() {
     this.dialogRef.close();
-    this.dialog.open(SignupComponent, { width: '420px' });
+    this.dialog.open(SignupComponent);
   }
 }
