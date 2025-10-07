@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [SharedModule],
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css',
+  styleUrl: '../auth-dialog.css',
 })
 export class SignupComponent {
   private authService = inject(AuthenticationService);
@@ -58,6 +58,6 @@ export class SignupComponent {
 
   openLogin() {
     this.dialogRef.close();
-    this.dialog.open(LoginComponent, { width: '400px' });
+    this.dialog.open(LoginComponent);
   }
 }

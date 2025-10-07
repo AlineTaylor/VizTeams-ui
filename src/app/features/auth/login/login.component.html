@@ -1,18 +1,18 @@
 <div class="container">
   <h2 mat-dialog-title>Sign In</h2>
   <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
-    <mat-dialog-content>
+    <mat-dialog-content class="dialog-body">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email (or Username)</mat-label>
         <input
           matInput
-            formControlName="identifier"
+          formControlName="identifier"
           placeholder="user@viz.com"
           autocomplete="username email"
           required
         />
-          @if(loginForm.get('identifier')?.hasError('required')){
-          <mat-error> Email or username is required </mat-error>}
+        @if(loginForm.get('identifier')?.hasError('required')){
+        <mat-error> Email or username is required </mat-error>}
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full-width">
@@ -44,7 +44,13 @@
       </mat-error>
       }
     </mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions class="dialog-footer">
+      <div class="alt-action">
+        <span>Don't have an account?</span>
+        <button type="button" mat-button color="primary" (click)="openSignup()">
+          Sign up here
+        </button>
+      </div>
       <button
         matButton
         type="submit"
@@ -55,9 +61,5 @@
         Login
       </button>
     </mat-dialog-actions>
-    <div class="alt-action">
-      <span>Don't have an account?</span>
-      <button type="button" mat-button color="primary" (click)="openSignup()">Sign up here</button>
-    </div>
   </form>
 </div>

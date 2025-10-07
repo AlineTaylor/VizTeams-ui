@@ -6,7 +6,7 @@
   <!-- "Sign In" and "Sign Up" when not logged in -->
   @if(!(user$ | async); as noUser){
   <div class="user" mat-button>
-    <button mat-stroked-button (click)="openDialog()">Sign in</button>
+    <button mat-stroked-button (click)="openLogin()">Sign in</button>
     <button mat-stroked-button (click)="openSignup()">Sign up</button>
   </div>
   }
@@ -15,5 +15,6 @@
   <div class="user" mat-button>
     <span>{{ user.email || user.username }}</span>
     <button mat-button color="primary" (click)="logout()">Logout</button>
-  </div>}
+  </div>
+  }
 </mat-toolbar>
