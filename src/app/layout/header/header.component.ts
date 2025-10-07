@@ -18,12 +18,12 @@ export class HeaderComponent {
 
   user$ = this.authService.user$;
 
-  openDialog() {
-    this.dialog.open(LoginComponent, { width: '400px' });
+  openLogin() {
+    this.dialog.open(LoginComponent);
   }
 
   openSignup() {
-    this.dialog.open(SignupComponent, { width: '420px' });
+    this.dialog.open(SignupComponent);
   }
 
   logout() {

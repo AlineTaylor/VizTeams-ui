@@ -1,0 +1,51 @@
+.dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.container {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px;
+  margin-top: -16px;
+}
+
+.alt-action {
+  font-size: 0.875rem;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.alt-action span {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.alt-action button {
+  padding: 0 4px;
+  min-width: auto;
+  line-height: 1.2;
+  margin-left: 0;
+}
+
+.dialog-footer > button {
+  padding: 10px 24px !important;
+  font-size: 1rem !important;
+  min-height: 40px !important;
+}
+
+mat-error p {
+  margin: 0;
+}

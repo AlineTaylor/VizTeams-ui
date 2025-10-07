@@ -1,7 +1,7 @@
 <div class="container">
   <h2 mat-dialog-title>Sign Up</h2>
   <form [formGroup]="signupForm" (ngSubmit)="submit()" novalidate>
-    <mat-dialog-content>
+    <mat-dialog-content class="dialog-body">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
         <input
@@ -50,7 +50,13 @@
       </mat-error>
       }
     </mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions class="dialog-footer">
+      <div class="alt-action">
+        <span>Already have an account?</span>
+        <button type="button" mat-button color="primary" (click)="openLogin()">
+          Sign in here
+        </button>
+      </div>
       <button
         mat-raised-button
         color="primary"
@@ -60,9 +66,5 @@
         Submit
       </button>
     </mat-dialog-actions>
-    <div class="alt-action">
-      <span>Already have an account?</span>
-      <button type="button" mat-button color="primary" (click)="openLogin()">Sign in here</button>
-    </div>
   </form>
 </div>
