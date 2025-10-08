@@ -3,7 +3,7 @@
   flex-direction: column;
   flex: 1 1 0;
   min-width: 0;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 120px); /* full-height minus header */
   margin: 32px 0 32px 32px;
   padding: 0;
   background: var(--color-bg);
@@ -17,13 +17,12 @@
   font-size: 1.1rem;
   font-weight: 600;
   padding: 12px 16px;
-  border-bottom: 2px solid #d1d1d1;
+  border-bottom: 2px solid var(--color-border-alt);
 }
 
 .actions button {
   font-size: 0.85rem;
 }
-
 
 .teams-scroll {
   flex: 1;
@@ -55,7 +54,7 @@
   align-items: center;
   padding: 8px 8px 12px 8px;
   gap: 12px;
-  background: linear-gradient(#eee, #dcdcdc);
+  background: linear-gradient(var(--color-bg-alt), #dcdcdc);
   border-top: 1px solid var(--color-border);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
 }
@@ -75,7 +74,7 @@
   height: 40px;
   border-radius: 2px;
   overflow: hidden;
-  background: #ccc;
+  background: var(--color-bg-alt);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
@@ -102,7 +101,7 @@
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 600;
-  background: #fafafa;
+  background: var(--color-bg-alt);
   border: 1px dashed var(--color-border);
   border-radius: 2px;
 }
@@ -119,9 +118,8 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: #d1d1d1;
+  background-color: var(--color-border-alt);
 }
-
 
 .add-team-square {
   position: absolute;
@@ -131,8 +129,8 @@
   height: 32px;
   border: none;
   border-radius: 4px;
-  background-color: #607d8b;
-  color: white;
+  background-color: var(--color-accent-alt);
+  color: var(--color-text-alt);
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
@@ -144,6 +142,36 @@
 }
 
 .add-team-square:hover {
-  background-color: #546e7a;
+  background-color: var(--color-accent);
   transform: scale(1.05);
+}
+
+/* mat-action-row inside expansion panel */
+::ng-deep .team-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 4px 8px 8px 8px;
+  gap: 8px;
+}
+
+.member-count {
+  margin-right: auto;
+  font-size: 0.7rem;
+  opacity: 0.75;
+  letter-spacing: 0.5px;
+}
+
+.add-member-btn {
+  --mdc-icon-button-icon-size: 22px;
+  color: var(--color-text) !important;
+  width: 36px;
+  height: 36px;
+}
+
+.add-member-btn mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
 }
