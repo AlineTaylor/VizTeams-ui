@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, catchError, of } from 'rxjs';
-import { Team } from '../../../shared/models/team.models';
+import { Team, TeamMember } from '../../../shared/models/team.models';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
@@ -62,5 +62,26 @@ export class TeamService {
         },
         error: (err) => console.error('❌ Error deleting team:', err),
       });
+  }
+
+  /** Adding a member to a team */
+  addMemberToTeam(teamId: string, member: TeamMember) {
+    const url = `${this.apiUrl}/${teamId}/members`;
+    this.http.post<TeamMember>(url, member).subscribe({
+      next: (saved) => {
+        // Update local state only after success
+        const current = this.teamsSubject.value;
+        const idx = current.findIndex((t) => t._id === teamId);
+        if (idx === -1) return;
+        const updatedTeam: Team = {
+          ...current[idx],
+          members: [...current[idx].members, saved],
+        };
+        const updated = [...current];
+        updated[idx] = updatedTeam;
+        this.teamsSubject.next(updated);
+      },
+      error: (err) => console.error('Error adding member:', err),
+    });
   }
 }

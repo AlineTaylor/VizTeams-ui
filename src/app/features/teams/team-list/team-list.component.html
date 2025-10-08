@@ -15,31 +15,64 @@
           <mat-panel-title>{{ team.teamName }}</mat-panel-title>
           <mat-panel-description>
             {{ team.members.length }} member{{
-              team.members.length === 1 ? '' : 's'
+              team.members.length === 1 ? "" : "s"
             }}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
         <!-- Team Description -->
         @if (team.description) {
-          <div class="team-description">
-            <strong>Description:</strong> {{ team.description }}
-          </div>
+        <div class="team-description">
+          <strong>Description:</strong> {{ team.description }}
+        </div>
         }
 
-        <!-- Team Members -->
+        <!-- Team Members (Avatar Strip) -->
         <div class="team-members-strip">
           @if (team.members.length > 0) {
-            <ul class="member-list">
-              @for (m of team.members; track m._id) {
-                <li>
-                  <strong>{{ m.name }}</strong> — <em>{{ m.title }}</em>
-                </li>
+          <div class="avatars">
+            @for (m of getDisplayedMembers(team); track trackMember($index, m))
+            {
+            <div
+              class="avatar-tile"
+              [matTooltip]="m.name + (m.title ? ' — ' + m.title : '')"
+              matTooltipPosition="above"
+            >
+              @if (m.avatarUrl) {
+              <img [src]="m.avatarUrl" [alt]="m.name" />
+              } @else {
+              <img src="/avatar.png" alt="{{ m.name }}" />
               }
-            </ul>
+            </div>
+            } @if (team.members.length > maxAvatars) {
+            <div
+              class="more-count"
+              [matTooltip]="
+                team.members.length - maxAvatars + ' more member(s)'
+              "
+            >
+              +{{ team.members.length - maxAvatars }}
+            </div>
+            }
+          </div>
           } @else {
-            <div class="empty">No members listed.</div>
+          <div class="empty">No members yet.</div>
           }
+          <span class="count"
+            >{{ team.members.length }}/{{ TEAM_CAPACITY }}</span
+          >
+          <button
+            mat-icon-button
+            class="add-member-btn"
+            (click)="onAddMember(team)"
+            [disabled]="isTeamFull(team)"
+            [matTooltip]="
+              isTeamFull(team) ? 'Team is at capacity' : 'Add Member'
+            "
+            matTooltipPosition="above"
+          >
+            <mat-icon>person_add</mat-icon>
+          </button>
         </div>
       </mat-expansion-panel>
       } @empty {
@@ -51,17 +84,17 @@
   <div class="bottom-divider"></div>
 
   @if (selectedTeam) {
-    <button
-      mat-icon-button
-      color="warn"
-      class="add-team-square"
-      style="right: 70px"
-      (click)="deleteSelectedTeam()"
-      matTooltip="Delete Selected Team"
-      matTooltipPosition="above"
-    >
-      <span style="font-size: 20px; font-weight: bold">×</span>
-    </button>
+  <button
+    mat-icon-button
+    color="warn"
+    class="add-team-square"
+    style="right: 70px"
+    (click)="deleteSelectedTeam()"
+    matTooltip="Delete Selected Team"
+    matTooltipPosition="above"
+  >
+    <span style="font-size: 20px; font-weight: bold">×</span>
+  </button>
   }
 
   <button

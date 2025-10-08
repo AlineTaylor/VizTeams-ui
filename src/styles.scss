@@ -77,6 +77,24 @@ body,
   color: var(--color-error) !important;
 }
 
+/* Global mat-icon-button cursor */
+.mat-mdc-icon-button,
+button[matsuffix],
+button[matprefix],
+mat-button[mat-icon-button] {
+  cursor: pointer !important;
+}
+
+/* Spacing for password visibility toggle button */
+.mat-mdc-form-field-icon-suffix {
+  padding: 0px 2rem 0px 4px !important;
+}
+
+div.mat-mdc-form-field-icon-suffix {
+  padding-right: 2rem !important;
+}
+
+//Add team dialog styles
 ::ng-deep .custom-add-team-dialog .mat-mdc-dialog-container {
   width: 700px !important;
   max-width: 90vw !important;

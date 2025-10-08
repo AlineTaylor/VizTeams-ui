@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
-import { Team } from '../../../../shared/models/team.models';
+import { Team, TeamMember } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 import { TeamService } from '../../../core/services/team.service';
+import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
 
 @Component({
   selector: 'app-team-list',
@@ -16,6 +17,8 @@ export class TeamListComponent implements OnInit {
   teams: Team[] = [];
   panelOpenState: Record<string, boolean> = {};
   selectedTeam: Team | null = null;
+  readonly TEAM_CAPACITY = 12;
+  readonly maxAvatars = 12; // show up to capacity inline (adjust if you want to truncate earlier)
 
   @Output() selectTeam = new EventEmitter<Team>();
 
@@ -73,4 +76,30 @@ export class TeamListComponent implements OnInit {
       this.selectedTeam = null;
     }
   }
+
+  onAddMember(team: Team) {
+    if (!team._id || this.isTeamFull(team)) return;
+    const dialogRef = this.dialog.open(AddMemberDialogComponent, {
+      width: '520px',
+      maxHeight: '90vh',
+      data: { teamId: team._id, teams: this.teams.map(t => ({ _id: t._id, teamName: t.teamName })) },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.teamId && result?.member) {
+        const member: TeamMember = result.member;
+        this.teamService.addMemberToTeam(result.teamId, member);
+      }
+    });
+  }
+
+  isTeamFull(team: Team): boolean {
+    return team.members.length >= this.TEAM_CAPACITY;
+  }
+
+  getDisplayedMembers(team: Team) {
+    return team.members.slice(0, this.maxAvatars);
+  }
+
+  trackMember = (_: number, m: any) => m._id || m.name;
 }
