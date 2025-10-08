@@ -5,6 +5,7 @@ import { SharedModule } from '../../../../shared/shared.module';
 
 interface AddMemberData {
   teamId: string;
+  teams: { _id?: string; teamName: string }[];
 }
 
 @Component({
@@ -12,17 +13,27 @@ interface AddMemberData {
   standalone: true,
   imports: [SharedModule, ReactiveFormsModule],
   templateUrl: './add-member-dialog.component.html',
-  styleUrl: './add-member-dialog.component.css'
+  styleUrl: './add-member-dialog.component.css',
 })
 export class AddMemberDialogComponent {
   private fb = inject(FormBuilder);
   dialogRef = inject(MatDialogRef<AddMemberDialogComponent>);
   data = inject<AddMemberData>(MAT_DIALOG_DATA);
 
+  titleOptions: string[] = [
+    'Software Engineer',
+    'Senior Software Engineer',
+    'Product Manager',
+    'UX Designer',
+    'QA Engineer',
+  ];
+
   form = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    title: ['', [Validators.required, Validators.minLength(2)]],
-    avatarUrl: ['']
+    firstName: ['', [Validators.required, Validators.minLength(2)]],
+    lastName: ['', [Validators.required, Validators.minLength(2)]],
+    title: ['', [Validators.required]],
+    teamId: [this.data.teamId, [Validators.required]],
+    avatarUrl: [''],
   });
 
   submitting = false;
@@ -30,15 +41,15 @@ export class AddMemberDialogComponent {
   submit() {
     if (this.form.invalid) return;
     this.submitting = true;
-    // Simulate slight delay / hook for future async avatar validation
     const value = this.form.value;
+    const name = `${value.firstName!.trim()} ${value.lastName!.trim()}`.trim();
     this.dialogRef.close({
-      teamId: this.data.teamId,
+      teamId: value.teamId,
       member: {
-        name: value.name!.trim(),
-        title: value.title!.trim(),
-        avatarUrl: value.avatarUrl?.trim() || undefined
-      }
+        name,
+        title: value.title,
+        avatarUrl: value.avatarUrl?.trim() || undefined,
+      },
     });
   }
 

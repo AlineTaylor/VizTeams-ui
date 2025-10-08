@@ -82,7 +82,7 @@ export class TeamListComponent implements OnInit {
     const dialogRef = this.dialog.open(AddMemberDialogComponent, {
       width: '520px',
       maxHeight: '90vh',
-      data: { teamId: team._id },
+      data: { teamId: team._id, teams: this.teams.map(t => ({ _id: t._id, teamName: t.teamName })) },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

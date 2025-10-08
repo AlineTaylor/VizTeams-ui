@@ -1,24 +1,39 @@
 <h2 mat-dialog-title>Add Member</h2>
 <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
   <mat-dialog-content class="dialog-body">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="Jane Doe" required />
-      @if (form.controls.name.hasError('required')) {
-        <mat-error>Name is required</mat-error>
-      } @else if (form.controls.name.hasError('minlength')) {
-        <mat-error>Min 2 characters</mat-error>
-      }
-    </mat-form-field>
+    <div class="name-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" placeholder="Jane" required />
+        @if (form.controls.firstName.hasError('required')) {<mat-error>Required</mat-error>}
+        @else if (form.controls.firstName.hasError('minlength')) {<mat-error>Min 2 chars</mat-error>}
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Last Name</mat-label>
+        <input matInput formControlName="lastName" placeholder="Doe" required />
+        @if (form.controls.lastName.hasError('required')) {<mat-error>Required</mat-error>}
+        @else if (form.controls.lastName.hasError('minlength')) {<mat-error>Min 2 chars</mat-error>}
+      </mat-form-field>
+    </div>
 
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Title</mat-label>
-      <input matInput formControlName="title" placeholder="Software Engineer" required />
-      @if (form.controls.title.hasError('required')) {
-        <mat-error>Title is required</mat-error>
-      } @else if (form.controls.title.hasError('minlength')) {
-        <mat-error>Min 2 characters</mat-error>
-      }
+      <mat-select formControlName="title" required>
+        @for (t of titleOptions; track t) {
+          <mat-option [value]="t">{{ t }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.title.hasError('required')) {<mat-error>Title required</mat-error>}
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Team</mat-label>
+      <mat-select formControlName="teamId" required>
+        @for (t of data.teams; track t.teamName) {
+          <mat-option [value]="t._id">{{ t.teamName }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.teamId.hasError('required')) {<mat-error>Team required</mat-error>}
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
