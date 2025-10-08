@@ -17,7 +17,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0 16px;
+  padding: 0 16px 24px 16px;
   margin-top: -16px;
 }
 
@@ -48,4 +48,9 @@
 
 mat-error p {
   margin: 0;
+}
+
+/* Removing MS Edge's native visibility toggle */
+.password-input ::-ms-reveal {
+  display: none;
 }
