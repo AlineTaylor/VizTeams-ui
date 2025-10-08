@@ -52,15 +52,15 @@ export class TeamListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.teamName && result?.description) {
-        const newTeam: Team = {
-          teamName: result.teamName,
-          description: result.description,
-          members: [],
-        };
-        this.teamService.addTeam(newTeam);
-      }
-    });
+  if (result?.teamName && result?.description) {
+    const newTeam: Team = {
+      teamName: result.teamName,
+      description: result.description,
+      members: [],
+    };
+    this.teamService.addTeam(newTeam);
+    }
+  });
   }
 
   deleteSelectedTeam() {

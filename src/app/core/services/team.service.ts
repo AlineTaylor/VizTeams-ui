@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Team } from '../../../shared/models/team.models';
 
@@ -13,10 +13,19 @@ export class TeamService {
     this.loadTeams();
   }
 
+  /** Helper to get authorization headers */
+  private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    });
+  }
+
   /** Fetch teams from the backend */
   loadTeams() {
     this.http
-      .get<Team[]>(this.apiUrl)
+      .get<Team[]>(this.apiUrl, { headers: this.getAuthHeaders() })
       .pipe(
         catchError((err) => {
           console.error('❌ Failed to load teams:', err);
@@ -29,25 +38,29 @@ export class TeamService {
       });
   }
 
-  /** Add a new team */
-  addTeam(newTeam: Team) {
-    this.http.post<Team>(this.apiUrl, newTeam).subscribe({
-      next: (created) => {
-        const updated = [...this.teamsSubject.value, created];
-        this.teamsSubject.next(updated);
-      },
-      error: (err) => console.error('❌ Error adding team:', err),
-    });
-  }
+ addTeam(newTeam: Team) {
+  this.http.post<Team>(this.apiUrl, newTeam).subscribe({
+    next: (created) => {
+      console.log('✅ Created team:', created);
+      // Refresh list directly from backend
+      this.loadTeams();
+    },
+    error: (err) => console.error('❌ Error adding team:', err),
+  });
+}
+
 
   /** Delete team */
   deleteTeam(id: string) {
-    this.http.delete(`${this.apiUrl}/${id}`).subscribe({
-      next: () => {
-        const updated = this.teamsSubject.value.filter((t) => t._id !== id);
-        this.teamsSubject.next(updated);
-      },
-      error: (err) => console.error('❌ Error deleting team:', err),
-    });
+    this.http
+      .delete(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: () => {
+          const updated = this.teamsSubject.value.filter((t) => t._id !== id);
+          this.teamsSubject.next(updated);
+          console.log(`✅ Deleted team ${id}`);
+        },
+        error: (err) => console.error('❌ Error deleting team:', err),
+      });
   }
 }
