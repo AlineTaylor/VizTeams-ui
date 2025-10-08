@@ -1,13 +1,13 @@
-// TODO Update to match provided dataset
 export interface TeamMember {
-  id: string;
+  _id?: string;
   name: string;
-  role: string;
+  title: string;
   avatarUrl?: string;
 }
 
 export interface Team {
-  id: string;
-  name: string;
+  _id?: string;
+  teamName: string;
+  description: string;
   members: TeamMember[];
 }

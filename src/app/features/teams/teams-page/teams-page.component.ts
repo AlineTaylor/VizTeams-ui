@@ -8,11 +8,17 @@ import { Team } from '../../../../shared/models/team.models';
   standalone: true,
   imports: [TeamListComponent, MembersPanelComponent],
   templateUrl: './teams-page.component.html',
-  styleUrl: './teams-page.component.css',
+  styleUrls: ['./teams-page.component.css'],
 })
 export class TeamsPageComponent {
   selectedTeam: Team | null = null;
-  handleSelect(team: Team) {
-    this.selectedTeam = team;
+
+  handleSelect(team: Team | null) {
+    // Toggle: if same team clicked again, deselect it
+    if (this.selectedTeam?._id === team?._id) {
+      this.selectedTeam = null;
+    } else {
+      this.selectedTeam = team;
+    }
   }
 }

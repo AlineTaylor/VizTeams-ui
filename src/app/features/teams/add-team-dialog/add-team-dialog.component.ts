@@ -19,16 +19,16 @@ export class AddTeamDialogComponent {
 
   constructor(private dialogRef: MatDialogRef<AddTeamDialogComponent>) {}
 
-  save() {
-    if (this.form.valid) {
-      this.dialogRef.close({
-        name: this.form.value.name,
-        description: this.form.value.description ?? '' // NEW
-      });
-    }
+save() {
+  if (this.form.valid) {
+    this.dialogRef.close({
+      teamName: this.form.value.name,
+      description: this.form.value.description ?? ''
+    });
   }
+}
 
-  cancel() {
-    this.dialogRef.close();
+cancel() {
+  this.dialogRef.close();
   }
 }
