@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
-import { Team } from '../../../../shared/models/team.models';
+import { Team, TeamMember } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
 import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 import { TeamService } from '../../../core/services/team.service';
+import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
 
 @Component({
   selector: 'app-team-list',
@@ -77,9 +78,19 @@ export class TeamListComponent implements OnInit {
   }
 
   onAddMember(team: Team) {
-    // TODO Placeholder for opening Add Member dialog later
-    // Just logging to the console for now for UI development
-    console.log('Add member clicked for team', team.teamName, team);
+    if (!team._id || this.isTeamFull(team)) return;
+    const dialogRef = this.dialog.open(AddMemberDialogComponent, {
+      width: '520px',
+      maxHeight: '90vh',
+      data: { teamId: team._id },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result?.teamId && result?.member) {
+        const member: TeamMember = result.member;
+        this.teamService.addMemberToTeam(result.teamId, member);
+      }
+    });
   }
 
   isTeamFull(team: Team): boolean {
