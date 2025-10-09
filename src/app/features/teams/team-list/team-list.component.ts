@@ -18,7 +18,7 @@ export class TeamListComponent implements OnInit {
   panelOpenState: Record<string, boolean> = {};
   selectedTeam: Team | null = null;
   readonly TEAM_CAPACITY = 12;
-  readonly maxAvatars = 12; // show up to capacity inline (adjust if you want to truncate earlier)
+  readonly maxAvatars = 12;
 
   @Output() selectTeam = new EventEmitter<Team>();
 
@@ -55,15 +55,15 @@ export class TeamListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-  if (result?.teamName && result?.description) {
-    const newTeam: Team = {
-      teamName: result.teamName,
-      description: result.description,
-      members: [],
-    };
-    this.teamService.addTeam(newTeam);
-    }
-  });
+      if (result?.teamName && result?.description) {
+        const newTeam: Team = {
+          teamName: result.teamName,
+          description: result.description,
+          members: [],
+        };
+        this.teamService.addTeam(newTeam);
+      }
+    });
   }
 
   deleteSelectedTeam() {
@@ -79,16 +79,28 @@ export class TeamListComponent implements OnInit {
 
   onAddMember(team: Team) {
     if (!team._id || this.isTeamFull(team)) return;
+
     const dialogRef = this.dialog.open(AddMemberDialogComponent, {
       width: '520px',
       maxHeight: '90vh',
-      data: { teamId: team._id, teams: this.teams.map(t => ({ _id: t._id, teamName: t.teamName })) },
+      data: {
+        teamId: team._id,
+        teams: this.teams.map((t) => ({ _id: t._id, teamName: t.teamName })),
+      },
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result?.teamId && result?.member) {
-        const member: TeamMember = result.member;
-        this.teamService.addMemberToTeam(result.teamId, member);
+    dialogRef.afterClosed().subscribe((updatedTeam) => {
+      if (updatedTeam) {
+        const index = this.teams.findIndex((t) => t._id === updatedTeam._id);
+        if (index > -1) {
+          this.teams[index] = updatedTeam;
+        }
+
+        if (this.selectedTeam?._id === updatedTeam._id) {
+          this.selectedTeam = updatedTeam;
+        }
+
+        console.log('✅ Member added successfully — team updated:', updatedTeam);
       }
     });
   }
