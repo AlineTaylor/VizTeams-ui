@@ -4,8 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class PicsumService {
-  private apiUrl = `${environment.apiUrl}/photos`;
-
+  private apiUrl = `${environment.apiUrl}/api/photos`;
   constructor(private http: HttpClient) {}
 
   getPhotos(): Observable<any[]> {

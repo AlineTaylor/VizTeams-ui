@@ -7,7 +7,6 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 import { MemberService } from '../../../core/services/member.service';
 
-/** Dialog data passed in when opening Add Member dialog */
 interface AddMemberData {
   teamId: string;
   teams: { _id?: string; teamName: string }[];
@@ -78,7 +77,6 @@ export class AddMemberDialogComponent implements OnInit {
     this.currentPage.set(event.pageIndex);
   }
 
-  // ✅ Use Picsum images only, fallback to first photo
   getSelectedAvatar(): string {
     return this.selectedPhoto() || this.photos()[0]?.download_url || '';
   }

@@ -6,8 +6,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MemberService {
-  private apiUrl = `${environment.apiUrl}/members`;
-
+  private apiUrl = `${environment.apiUrl}/api/members`;
   constructor(private http: HttpClient) {}
 
   addMember(teamId: string, member: any): Observable<Team> {
