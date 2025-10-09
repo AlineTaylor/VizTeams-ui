@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Team } from '../../../shared/models/team.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class MemberService {
-  private apiUrl = 'http://localhost:3000/api/members';
+  private apiUrl = `${environment.apiUrl}/members`;
 
   constructor(private http: HttpClient) {}
 

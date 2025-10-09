@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, catchError, of } from 'rxjs';
 import { Team, TeamMember } from '../../../shared/models/team.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
-  private apiUrl = 'http://localhost:3000/teams';
+  private apiUrl = `${environment.apiUrl}/teams`;
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
 
