@@ -14,9 +14,7 @@
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.teamName }}</mat-panel-title>
           <mat-panel-description>
-            {{ team.members.length }} member{{
-              team.members.length === 1 ? "" : "s"
-            }}
+            {{ team.members.length }} member{{ team.members.length === 1 ? '' : 's' }}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -27,29 +25,27 @@
         </div>
         }
 
-        <!-- Team Members (Avatar Strip) -->
+        <!-- ✅ Team Members (Avatar Strip) -->
         <div class="team-members-strip">
           @if (team.members.length > 0) {
           <div class="avatars">
-            @for (m of getDisplayedMembers(team); track trackMember($index, m))
-            {
+            @for (m of getDisplayedMembers(team); track trackMember($index, m)) {
             <div
               class="avatar-tile"
               [matTooltip]="m.name + (m.title ? ' — ' + m.title : '')"
               matTooltipPosition="above"
             >
-              @if (m.avatarUrl) {
-              <img [src]="m.avatarUrl" [alt]="m.name" />
-              } @else {
-              <img src="/avatar.png" alt="{{ m.name }}" />
-              }
+              <img
+                [src]="m.avatarUrl || 'assets/avatar.png'"
+                [alt]="m.name"
+                class="avatar-img"
+              />
             </div>
-            } @if (team.members.length > maxAvatars) {
+            }
+            @if (team.members.length > maxAvatars) {
             <div
               class="more-count"
-              [matTooltip]="
-                team.members.length - maxAvatars + ' more member(s)'
-              "
+              [matTooltip]="team.members.length - maxAvatars + ' more member(s)'"
             >
               +{{ team.members.length - maxAvatars }}
             </div>
@@ -58,17 +54,17 @@
           } @else {
           <div class="empty">No members yet.</div>
           }
-          <span class="count"
-            >{{ team.members.length }}/{{ TEAM_CAPACITY }}</span
-          >
+
+          <span class="count">
+            {{ team.members.length }}/{{ TEAM_CAPACITY }}
+          </span>
+
           <button
             mat-icon-button
             class="add-member-btn"
             (click)="onAddMember(team)"
             [disabled]="isTeamFull(team)"
-            [matTooltip]="
-              isTeamFull(team) ? 'Team is at capacity' : 'Add Member'
-            "
+            [matTooltip]="isTeamFull(team) ? 'Team is at capacity' : 'Add Member'"
             matTooltipPosition="above"
           >
             <mat-icon>person_add</mat-icon>
