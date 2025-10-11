@@ -68,9 +68,12 @@ export class AddMemberDialogComponent implements OnInit {
     });
   }
 
+  // ✅ Added debug logging for selected photo + form sync
   selectPhoto(url: string): void {
     this.selectedPhoto.set(url);
-    this.form.patchValue({ avatarUrl: url });
+    this.form.patchValue({ avatarUrl: url }, { emitEvent: true });
+    console.log('🖼️ Selected photo URL:', url);
+    console.log('📋 Form avatarUrl value:', this.form.value.avatarUrl);
   }
 
   handlePageChange(event: PageEvent): void {
@@ -90,18 +93,25 @@ export class AddMemberDialogComponent implements OnInit {
     this.submitting = true;
     const value = this.form.value;
     const name = `${value.firstName!.trim()} ${value.lastName!.trim()}`.trim();
+    const avatarUrl = value.avatarUrl?.trim() || this.getSelectedAvatar();
+
+    // 🧩 Debug log chain
+    console.log('🚀 Submitting form data:', value);
+    console.log('👤 Member name:', name);
+    console.log('🖼️ Final avatar URL being sent:', avatarUrl);
 
     const member = {
       name,
       title: value.title,
-      avatarUrl: value.avatarUrl?.trim() || this.getSelectedAvatar(),
+      avatarUrl,
     };
+
+    console.log('📦 Full member object before API call:', member);
 
     this.memberService.addMember(value.teamId!, member).subscribe({
       next: (res: any) => {
         const updatedTeam = res.team || res;
-        console.log('✅ Member saved:', updatedTeam);
-
+        console.log('✅ Member saved successfully! Updated team:', updatedTeam);
         this.dialogRef.close(updatedTeam);
         this.submitting = false;
       },
