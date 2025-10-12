@@ -9,9 +9,14 @@
   </div>
 
   <div class="members-grid">
-    @for (m of displayMembers; track m.name) {
+    @for (m of displayMembers; track m._id) {
     <div class="member-tile">
-      <div class="avatar placeholder">{{ m.name.charAt(0) }}</div>
+      @if (m.avatarUrl) {
+      <img class="member-avatar avatar" [src]="m.avatarUrl" [alt]="m.name" />
+      } @else {
+      <img class="member-avatar avatar placeholder" src="/avatar.png" />
+      }
+
       <div class="meta">
         <div class="name">{{ m.name }}</div>
         <div class="role">{{ m.title }}</div>
@@ -21,10 +26,23 @@
       </div>
     </div>
     } @empty {
-    <div class="empty">No members found.</div>
+    <div class="empty">No members.</div>
     }
   </div>
   } @else {
   <div class="members-placeholder">No members available.</div>
+  } @if (hasTeam) {
+  <div class="panel-footer">
+    <span class="spacer"></span>
+    <button
+      mat-icon-button
+      class="edit-team-btn"
+      (click)="openEditTeamDialog()"
+      matTooltip="Edit Team"
+      matTooltipPosition="above"
+    >
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
   }
 </mat-card>

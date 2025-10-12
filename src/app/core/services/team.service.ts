@@ -1,36 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, of } from 'rxjs';
+import { BehaviorSubject, catchError, of, tap } from 'rxjs';
 import { Team, TeamMember } from '../../../shared/models/team.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
-  private apiUrl = `${environment.apiUrl}/teams`;
+  private apiUrl = `${environment.apiUrl}/api/teams`;
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.loadTeams();
-  }
-
-  /** Helper to get authorization headers */
+  constructor(private http: HttpClient) {}
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     });
   }
 
-  /** Fetch teams from the backend */
+  /** Fetch teams from backend */
   loadTeams() {
     this.http
       .get<Team[]>(this.apiUrl, { headers: this.getAuthHeaders() })
       .pipe(
         catchError((err) => {
           console.error('❌ Failed to load teams:', err);
-          return of([]);
+          return of([] as Team[]);
         })
       )
       .subscribe((teams) => {
@@ -39,17 +35,64 @@ export class TeamService {
       });
   }
 
- addTeam(newTeam: Team) {
-  this.http.post<Team>(this.apiUrl, newTeam).subscribe({
-    next: (created) => {
-      console.log('✅ Created team:', created);
-      // Refresh list directly from backend
-      this.loadTeams();
-    },
-    error: (err) => console.error('❌ Error adding team:', err),
-  });
-}
+  /** ✅ Add a team instantly (no loading bar) */
+  addTeam(newTeam: Team) {
+    this.http
+      .post<Team>(this.apiUrl, newTeam, { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (created) => {
+          console.log('✅ Created team:', created);
+          const currentTeams = this.teamsSubject.value;
+          this.teamsSubject.next([...currentTeams, created]);
 
+          // Optional: quietly sync with backend (no loading bar)
+          this.http
+            .get<Team[]>(this.apiUrl, { headers: this.getAuthHeaders() })
+            .pipe(
+              catchError((err) => {
+                console.warn('⚠️ Background sync failed:', err);
+                return of(currentTeams);
+              })
+            )
+            .subscribe((teams) => this.teamsSubject.next(teams));
+        },
+        error: (err) => console.error('❌ Error adding team:', err),
+      });
+  }
+
+  /** Simple getter that fetches teams once */
+  getTeams() {
+    return this.http
+      .get<Team[]>(this.apiUrl, { headers: this.getAuthHeaders() })
+      .pipe(
+        catchError((err) => {
+          console.error('❌ Failed to fetch teams:', err);
+          return of([] as Team[]);
+        })
+      );
+  }
+
+  /** Update an existing team */
+  updateTeam(id: string, updates: Pick<Team, 'teamName' | 'description'>) {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http
+      .put<Team>(url, updates, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap((updatedTeam) => {
+          // Merge into local state so subscribers update immediately
+          const current = this.teamsSubject.value;
+          const idx = current.findIndex((t) => t._id === id);
+          if (idx > -1) {
+            const copy = [...current];
+            copy[idx] = { ...current[idx], ...updatedTeam };
+            this.teamsSubject.next(copy);
+          } else {
+            // Fallback: reload list if team not found locally
+            this.loadTeams();
+          }
+        })
+      );
+  }
 
   /** Delete team */
   deleteTeam(id: string) {
@@ -65,24 +108,25 @@ export class TeamService {
       });
   }
 
-  /** Adding a member to a team */
+  /** Add member to a team */
   addMemberToTeam(teamId: string, member: TeamMember) {
     const url = `${this.apiUrl}/${teamId}/members`;
-    this.http.post<TeamMember>(url, member).subscribe({
-      next: (saved) => {
-        // Update local state only after success
-        const current = this.teamsSubject.value;
-        const idx = current.findIndex((t) => t._id === teamId);
-        if (idx === -1) return;
-        const updatedTeam: Team = {
-          ...current[idx],
-          members: [...current[idx].members, saved],
-        };
-        const updated = [...current];
-        updated[idx] = updatedTeam;
-        this.teamsSubject.next(updated);
-      },
-      error: (err) => console.error('Error adding member:', err),
-    });
+    this.http
+      .post<TeamMember>(url, member, { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (saved) => {
+          const current = this.teamsSubject.value;
+          const idx = current.findIndex((t) => t._id === teamId);
+          if (idx === -1) return;
+          const updatedTeam: Team = {
+            ...current[idx],
+            members: [...current[idx].members, saved],
+          };
+          const updated = [...current];
+          updated[idx] = updatedTeam;
+          this.teamsSubject.next(updated);
+        },
+        error: (err) => console.error('Error adding member:', err),
+      });
   }
 }

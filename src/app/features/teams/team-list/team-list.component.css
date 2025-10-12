@@ -175,3 +175,18 @@
   height: 22px;
   line-height: 22px;
 }
+
+.loading-bar {
+  transition: opacity 0.3s ease;
+  display: block;
+}
+
+.loading-bar.ng-leave-active,
+.loading-bar.ng-enter {
+  opacity: 0;
+}
+
+.team-list-container {
+  position: relative;
+}
+

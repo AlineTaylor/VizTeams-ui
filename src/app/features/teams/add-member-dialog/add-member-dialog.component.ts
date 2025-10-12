@@ -1,11 +1,11 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SharedModule } from '../../../../shared/shared.module';
 import { PicsumService } from '../../../core/services/picsum.service';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { CommonModule } from '@angular/common';
+import { PageEvent } from '@angular/material/paginator';
 import { MemberService } from '../../../core/services/member.service';
+import { MEMBER_TITLE_OPTIONS } from '../../../../shared/titles.constants';
 
 interface AddMemberData {
   teamId: string;
@@ -15,7 +15,7 @@ interface AddMemberData {
 @Component({
   selector: 'app-add-member-dialog',
   standalone: true,
-  imports: [SharedModule, ReactiveFormsModule, CommonModule, MatPaginatorModule],
+  imports: [SharedModule],
   templateUrl: './add-member-dialog.component.html',
   styleUrls: ['./add-member-dialog.component.css'],
 })
@@ -28,14 +28,8 @@ export class AddMemberDialogComponent implements OnInit {
   dialogRef = inject(MatDialogRef<AddMemberDialogComponent>);
   data = inject<AddMemberData>(MAT_DIALOG_DATA);
 
-  // 📋 Title dropdown options
-  titleOptions: string[] = [
-    'Software Engineer',
-    'Senior Software Engineer',
-    'Product Manager',
-    'UX Designer',
-    'QA Engineer',
-  ];
+  // 📋 Title dropdown options (shared constant)
+  titleOptions = MEMBER_TITLE_OPTIONS;
 
   form = this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -78,8 +72,12 @@ export class AddMemberDialogComponent implements OnInit {
   }
 
   getSelectedAvatar(): string {
-    return this.selectedPhoto() || this.photos()[0]?.download_url || '';
-  }
+  return (
+    this.selectedPhoto() ||
+    this.photos()[0]?.download_url ||
+    '/avatar.png'
+  );
+}
 
   submit(): void {
     if (this.form.invalid) {

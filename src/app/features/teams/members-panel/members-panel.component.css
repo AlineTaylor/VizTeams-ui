@@ -3,7 +3,7 @@
   flex-direction: column;
   flex: 1 1 0;
   min-width: 0;
-  height: calc(100vh - 120px); /* full-height minus header */
+  height: calc(100vh - 120px);
   margin: 32px 32px 32px 24px;
   padding: 0;
   background: var(--color-bg);
@@ -20,8 +20,14 @@
   padding: 24px;
 }
 
-.panel-header { padding: 24px 24px 8px 24px; }
-.team-name { margin: 0; font-size: 1.25rem; font-weight: 600; }
+.panel-header {
+  padding: 24px 24px 8px 24px;
+}
+.team-name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
 
 .members-grid {
   display: grid;
@@ -30,6 +36,7 @@
   padding: 16px 24px 32px 24px;
   align-content: start;
   overflow: auto;
+  flex: 1 1 auto; /* footer at the bottom */
 }
 
 .member-tile {
@@ -40,12 +47,80 @@
   padding: 4px 4px;
   border-radius: 4px;
 }
-.member-tile:hover { background: var(--color-bg-alt); }
+.member-tile:hover {
+  background: var(--color-bg-alt);
+}
 
-.member-tile .avatar { width: 56px; height: 56px; border-radius: 4px; background: var(--color-bg-alt); display:flex; align-items:center; justify-content:center; font-weight:600; }
-.member-tile img.avatar { object-fit: cover; }
-.member-tile .avatar.placeholder { opacity: .7; }
+.member-tile .avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 4px;
+  background: var(--color-bg-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+.member-tile img.avatar {
+  object-fit: cover;
+}
+.member-tile .avatar.placeholder {
+  opacity: 0.7;
+}
+
+.member-tile .meta {
+  display: flex;
+  flex-direction: column;
+}
+.member-tile .meta .name {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.member-tile .meta .role {
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
 
 .member-tile .meta { display: flex; flex-direction: column; }
 .member-tile .meta .name { font-size: .9rem; font-weight: 600; }
 .member-tile .meta .role { font-size: .7rem; opacity: .75; }
+.member-avatar {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 2px solid #ff5722;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.member-tile {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  transition: background 0.2s ease-in-out;
+}
+
+.member-tile:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+/* Bottom action bar */
+.panel-footer {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px 16px 16px;
+  margin-top: auto;
+  border-top: 2px solid var(--color-border-alt);
+}
+.panel-footer .spacer {
+  flex: 1;
+}
+.edit-team-btn {
+  color: var(--color-text) !important;
+}

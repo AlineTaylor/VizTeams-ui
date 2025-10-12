@@ -1,15 +1,17 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, signal } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
-import { Team, TeamMember } from '../../../../shared/models/team.models';
+import { Team } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 import { TeamService } from '../../../core/services/team.service';
 import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
+import { delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-team-list',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, MatProgressBarModule],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css',
 })
@@ -20,13 +22,35 @@ export class TeamListComponent implements OnInit {
   readonly TEAM_CAPACITY = 12;
   readonly maxAvatars = 12;
 
+  // Loading state for progress bar
+  loading = signal<boolean>(false);
+
   @Output() selectTeam = new EventEmitter<Team>();
 
   constructor(private dialog: MatDialog, private teamService: TeamService) {}
 
   ngOnInit() {
-    // Subscribe to backend-loaded teams
-    this.teamService.teams$.subscribe((teams) => (this.teams = teams));
+  this.loadTeams();
+
+  // 👇 Listen to BehaviorSubject updates for instant changes
+  this.teamService.teams$.subscribe((teams) => {
+    this.teams = teams;
+  });
+}
+
+  /** ✅ Load teams and toggle loading bar */
+  loadTeams() {
+    this.loading.set(true);
+    this.teamService.getTeams().pipe(delay(1500)).subscribe({
+  next: (teams) => {
+    this.teams = teams;
+    this.loading.set(false);
+  },
+  error: (err) => {
+    console.error('❌ Error loading teams:', err);
+    this.loading.set(false);
+  },
+});
   }
 
   toggle(teamId: string) {
