@@ -11,15 +11,10 @@
   <div class="members-grid">
     @for (m of displayMembers; track m._id) {
     <div class="member-tile">
-      <img
-        [src]="m.avatarUrl || ''"
-        [alt]="m.name"
-        class=""
-      />
       @if (m.avatarUrl) {
-        <img class="member-avatar avatar" [src]="m.avatarUrl" [alt]="m.name" />
+      <img class="member-avatar avatar" [src]="m.avatarUrl" [alt]="m.name" />
       } @else {
-        <img class="member-avatar avatar placeholder" [src]="/avatar.png"/>
+      <img class="member-avatar avatar placeholder" src="/avatar.png" />
       }
 
       <div class="meta">
