@@ -12,6 +12,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [],
@@ -29,6 +30,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatExpansionModule,
     MatTooltipModule,
     MatSelectModule,
+    MatPaginatorModule,
   ],
   exports: [
     ReactiveFormsModule,
@@ -43,6 +45,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatExpansionModule,
     MatTooltipModule,
     MatSelectModule,
+    MatPaginatorModule,
   ],
 })
 export class SharedModule {}

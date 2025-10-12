@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>Edit Team</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  <mat-dialog-content class="dialog-body">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Team Name</mat-label>
+      <input
+        matInput
+        formControlName="teamName"
+        placeholder="Enter team name"
+        required
+      />
+      @if (form.controls.teamName.hasError('required')) {
+      <mat-error>Team name required</mat-error> } @else if
+      (form.controls.teamName.hasError('minlength')) {
+      <mat-error>Min 2 chars</mat-error> }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        rows="3"
+        placeholder="Team description (optional)"
+      ></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-footer">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Save
+    </button>
+  </mat-dialog-actions>
+</form>
