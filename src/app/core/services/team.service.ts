@@ -39,17 +39,16 @@ export class TeamService {
       });
   }
 
- addTeam(newTeam: Team) {
-  this.http.post<Team>(this.apiUrl, newTeam).subscribe({
-    next: (created) => {
-      console.log('✅ Created team:', created);
-      // Refresh list directly from backend
-      this.loadTeams();
-    },
-    error: (err) => console.error('❌ Error adding team:', err),
-  });
-}
-
+  addTeam(newTeam: Team) {
+    this.http.post<Team>(this.apiUrl, newTeam).subscribe({
+      next: (created) => {
+        console.log('✅ Created team:', created);
+        // Refresh list directly from backend
+        this.loadTeams();
+      },
+      error: (err) => console.error('❌ Error adding team:', err),
+    });
+  }
 
   /** Delete team */
   deleteTeam(id: string) {

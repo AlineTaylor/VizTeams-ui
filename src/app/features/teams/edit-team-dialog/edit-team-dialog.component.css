@@ -1,0 +1,18 @@
+.dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.full-width {
+  width: 100%;
+}
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: 0 16px 24px 16px;
+}
+.dialog-footer button + button {
+  margin-left: 12px;
+}
