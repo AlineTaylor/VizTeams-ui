@@ -80,35 +80,35 @@ export class AddMemberDialogComponent implements OnInit {
 }
 
   submit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-    this.submitting = true;
-    const value = this.form.value;
-    const name = `${value.firstName!.trim()} ${value.lastName!.trim()}`.trim();
-
-    const member = {
-      name,
-      title: value.title,
-      avatarUrl: value.avatarUrl?.trim() || this.getSelectedAvatar(),
-    };
-
-    this.memberService.addMember(value.teamId!, member).subscribe({
-      next: (res: any) => {
-        const updatedTeam = res.team || res;
-        console.log('✅ Member saved:', updatedTeam);
-
-        this.dialogRef.close(updatedTeam);
-        this.submitting = false;
-      },
-      error: (err) => {
-        console.error('❌ Error saving member:', err);
-        this.submitting = false;
-      },
-    });
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
   }
+
+  this.submitting = true;
+  const value = this.form.value;
+
+  const member = {
+    firstName: value.firstName?.trim(),
+    lastName: value.lastName?.trim(),
+    title: value.title?.trim(),
+    avatarUrl: value.avatarUrl?.trim() || this.getSelectedAvatar(),
+  };
+
+  this.memberService.addMember(value.teamId!, member).subscribe({
+    next: (res: any) => {
+      const updatedTeam = res.team || res;
+      console.log('✅ Member saved:', updatedTeam);
+
+      this.dialogRef.close(updatedTeam);
+      this.submitting = false;
+    },
+    error: (err) => {
+      console.error('❌ Error saving member:', err);
+      this.submitting = false;
+    },
+  });
+}
 
   cancel(): void {
     this.dialogRef.close();
