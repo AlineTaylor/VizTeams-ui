@@ -3,6 +3,15 @@
     <span>Teams</span>
   </div>
 
+  <!-- ✅ Loading bar at top -->
+  @if (loading()) {
+    <mat-progress-bar
+      mode="indeterminate"
+      color="accent"
+      class="loading-bar">
+    </mat-progress-bar>
+  }
+
   <div class="teams-scroll">
     <mat-accordion multi>
       @for (team of teams; track team._id) {
