@@ -10,8 +10,7 @@ export class TeamService {
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token');
     return new HttpHeaders({
@@ -27,7 +26,7 @@ export class TeamService {
       .pipe(
         catchError((err) => {
           console.error('❌ Failed to load teams:', err);
-          return of([]);
+          return of([] as Team[]);
         })
       )
       .subscribe((teams) => {
@@ -38,27 +37,27 @@ export class TeamService {
 
   /** ✅ Add a team instantly (no loading bar) */
   addTeam(newTeam: Team) {
-    this.http.post<Team>(this.apiUrl, newTeam).subscribe({
-      next: (created) => {
-        console.log('✅ Created team:', created);
+    this.http
+      .post<Team>(this.apiUrl, newTeam, { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (created) => {
+          console.log('✅ Created team:', created);
+          const currentTeams = this.teamsSubject.value;
+          this.teamsSubject.next([...currentTeams, created]);
 
-        // Instantly update current BehaviorSubject (instant UI update)
-        const currentTeams = this.teamsSubject.value;
-        this.teamsSubject.next([...currentTeams, created]);
-
-        // Optional: quietly sync with backend (no loading bar)
-        this.http
-          .get<Team[]>(this.apiUrl, { headers: this.getAuthHeaders() })
-          .pipe(
-            catchError((err) => {
-              console.warn('⚠️ Background sync failed:', err);
-              return of(currentTeams);
-            })
-          )
-          .subscribe((teams) => this.teamsSubject.next(teams));
-      },
-      error: (err) => console.error('❌ Error adding team:', err),
-    });
+          // Optional: quietly sync with backend (no loading bar)
+          this.http
+            .get<Team[]>(this.apiUrl, { headers: this.getAuthHeaders() })
+            .pipe(
+              catchError((err) => {
+                console.warn('⚠️ Background sync failed:', err);
+                return of(currentTeams);
+              })
+            )
+            .subscribe((teams) => this.teamsSubject.next(teams));
+        },
+        error: (err) => console.error('❌ Error adding team:', err),
+      });
   }
 
   /** Simple getter that fetches teams once */
@@ -68,7 +67,10 @@ export class TeamService {
       .pipe(
         catchError((err) => {
           console.error('❌ Failed to fetch teams:', err);
-          return of([]); // fallback empty array
+          return of([] as Team[]);
+        })
+      );
+  }
 
   /** Update an existing team */
   updateTeam(id: string, updates: Pick<Team, 'teamName' | 'description'>) {
@@ -109,20 +111,22 @@ export class TeamService {
   /** Add member to a team */
   addMemberToTeam(teamId: string, member: TeamMember) {
     const url = `${this.apiUrl}/${teamId}/members`;
-    this.http.post<TeamMember>(url, member).subscribe({
-      next: (saved) => {
-        const current = this.teamsSubject.value;
-        const idx = current.findIndex((t) => t._id === teamId);
-        if (idx === -1) return;
-        const updatedTeam: Team = {
-          ...current[idx],
-          members: [...current[idx].members, saved],
-        };
-        const updated = [...current];
-        updated[idx] = updatedTeam;
-        this.teamsSubject.next(updated);
-      },
-      error: (err) => console.error('Error adding member:', err),
-    });
+    this.http
+      .post<TeamMember>(url, member, { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (saved) => {
+          const current = this.teamsSubject.value;
+          const idx = current.findIndex((t) => t._id === teamId);
+          if (idx === -1) return;
+          const updatedTeam: Team = {
+            ...current[idx],
+            members: [...current[idx].members, saved],
+          };
+          const updated = [...current];
+          updated[idx] = updatedTeam;
+          this.teamsSubject.next(updated);
+        },
+        error: (err) => console.error('Error adding member:', err),
+      });
   }
 }
