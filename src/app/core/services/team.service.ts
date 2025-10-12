@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, catchError, of } from 'rxjs';
+import { BehaviorSubject, catchError, of, tap } from 'rxjs';
 import { Team, TeamMember } from '../../../shared/models/team.models';
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TeamService {
-  private apiUrl = `${environment.apiUrl}/teams`;
+  private apiUrl = `${environment.apiUrl}/api/teams`;
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
 
@@ -16,7 +16,7 @@ export class TeamService {
 
   /** Helper to get authorization headers */
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = sessionStorage.getItem('token');
     return new HttpHeaders({
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -40,14 +40,38 @@ export class TeamService {
   }
 
   addTeam(newTeam: Team) {
-    this.http.post<Team>(this.apiUrl, newTeam).subscribe({
-      next: (created) => {
-        console.log('✅ Created team:', created);
-        // Refresh list directly from backend
-        this.loadTeams();
-      },
-      error: (err) => console.error('❌ Error adding team:', err),
-    });
+    this.http
+      .post<Team>(this.apiUrl, newTeam, { headers: this.getAuthHeaders() })
+      .subscribe({
+        next: (created) => {
+          console.log('✅ Created team:', created);
+          // Refresh list directly from backend
+          this.loadTeams();
+        },
+        error: (err) => console.error('❌ Error adding team:', err),
+      });
+  }
+
+  /** Update an existing team */
+  updateTeam(id: string, updates: Pick<Team, 'teamName' | 'description'>) {
+    const url = `${this.apiUrl}/${id}`;
+    return this.http
+      .put<Team>(url, updates, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap((updatedTeam) => {
+          // Merge into local state so subscribers update immediately
+          const current = this.teamsSubject.value;
+          const idx = current.findIndex((t) => t._id === id);
+          if (idx > -1) {
+            const copy = [...current];
+            copy[idx] = { ...current[idx], ...updatedTeam };
+            this.teamsSubject.next(copy);
+          } else {
+            // Fallback: reload list if team not found locally
+            this.loadTeams();
+          }
+        })
+      );
   }
 
   /** Delete team */

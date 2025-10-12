@@ -10,7 +10,7 @@
         required
       />
       @if (form.controls.teamName.hasError('required')) {
-      <mat-error>Required</mat-error> } @else if
+      <mat-error>Team name required</mat-error> } @else if
       (form.controls.teamName.hasError('minlength')) {
       <mat-error>Min 2 chars</mat-error> }
     </mat-form-field>
