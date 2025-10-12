@@ -3,7 +3,7 @@
   flex-direction: column;
   flex: 1 1 0;
   min-width: 0;
-  height: calc(100vh - 120px); /* full-height minus header */
+  height: calc(100vh - 120px);
   margin: 32px 32px 32px 24px;
   padding: 0;
   background: var(--color-bg);
@@ -49,3 +49,29 @@
 .member-tile .meta { display: flex; flex-direction: column; }
 .member-tile .meta .name { font-size: .9rem; font-weight: 600; }
 .member-tile .meta .role { font-size: .7rem; opacity: .75; }
+.member-avatar {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 2px solid #ff5722;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.member-tile {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  transition: background 0.2s ease-in-out;
+}
+
+.member-tile:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}

@@ -11,7 +11,12 @@
   <div class="members-grid">
     @for (m of displayMembers; track m.name) {
     <div class="member-tile">
-      <div class="avatar placeholder">{{ m.name.charAt(0) }}</div>
+      <img
+        [src]="m.avatarUrl || '/avatar.png'"
+        [alt]="m.name"
+        class="member-avatar"
+      />
+
       <div class="meta">
         <div class="name">{{ m.name }}</div>
         <div class="role">{{ m.title }}</div>

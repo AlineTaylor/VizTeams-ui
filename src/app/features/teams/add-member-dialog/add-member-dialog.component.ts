@@ -78,8 +78,12 @@ export class AddMemberDialogComponent implements OnInit {
   }
 
   getSelectedAvatar(): string {
-    return this.selectedPhoto() || this.photos()[0]?.download_url || '';
-  }
+  return (
+    this.selectedPhoto() ||
+    this.photos()[0]?.download_url ||
+    '/avatar.png'
+  );
+}
 
   submit(): void {
     if (this.form.invalid) {
