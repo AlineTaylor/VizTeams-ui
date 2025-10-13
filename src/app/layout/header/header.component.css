@@ -19,3 +19,14 @@
   gap: 12px;
   align-items: center;
 }
+.logo {
+  height: 22px;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  vertical-align: middle;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
