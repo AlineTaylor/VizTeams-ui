@@ -1,103 +1,78 @@
-<h2 mat-dialog-title>Add Member</h2>
+<h2 mat-dialog-title>
+  {{ isEditMode() ? 'Edit Member' : 'Add Member' }}
+</h2>
+
 <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
   <mat-dialog-content class="dialog-body">
-    <div class="name-row">
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>First Name</mat-label>
-        <input
-          matInput
-          formControlName="firstName"
-          placeholder="Jane"
-          required
-        />
-        @if (form.controls.firstName.hasError('required')) {
-        <mat-error>Required</mat-error>
-        } @else if (form.controls.firstName.hasError('minlength')) {
-        <mat-error>Min 2 chars</mat-error>
-        }
-      </mat-form-field>
+    <!-- First Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>First Name</mat-label>
+      <input matInput formControlName="firstName" placeholder="Jane" required />
+      @if(form.controls.firstName.hasError('required')) {
+        <mat-error>First name is required</mat-error>
+      } @else if(form.controls.firstName.hasError('minlength')) {
+        <mat-error>Must be at least 2 characters</mat-error>
+      }
+    </mat-form-field>
 
-      <mat-form-field appearance="outline" class="half-width">
-        <mat-label>Last Name</mat-label>
-        <input matInput formControlName="lastName" placeholder="Doe" required />
-        @if (form.controls.lastName.hasError('required')) {
-        <mat-error>Required</mat-error>
-        } @else if (form.controls.lastName.hasError('minlength')) {
-        <mat-error>Min 2 chars</mat-error>
-        }
-      </mat-form-field>
-    </div>
+    <!-- Last Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Last Name</mat-label>
+      <input matInput formControlName="lastName" placeholder="Doe" required />
+      @if(form.controls.lastName.hasError('required')) {
+        <mat-error>Last name is required</mat-error>
+      } @else if(form.controls.lastName.hasError('minlength')) {
+        <mat-error>Must be at least 2 characters</mat-error>
+      }
+    </mat-form-field>
 
+    <!-- Title -->
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Title</mat-label>
       <mat-select formControlName="title" required>
-        @for (t of titleOptions; track t) {
-        <mat-option [value]="t">{{ t }}</mat-option>
+        @for(title of titleOptions; track title) {
+          <mat-option [value]="title">{{ title }}</mat-option>
         }
       </mat-select>
-      @if (form.controls.title.hasError('required')) {
-      <mat-error>Title required</mat-error>
+      @if(form.controls.title.hasError('required')) {
+        <mat-error>Title is required</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Team</mat-label>
-      <mat-select formControlName="teamId" required>
-        @for (t of data.teams; track t.teamName) {
-        <mat-option [value]="t._id">{{ t.teamName }}</mat-option>
-        }
-      </mat-select>
-      @if (form.controls.teamId.hasError('required')) {
-      <mat-error>Team required</mat-error>
-      }
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Avatar URL (optional)</mat-label>
-      <input
-        matInput
-        formControlName="avatarUrl"
-        placeholder="https://.../avatar.jpg"
-      />
-    </mat-form-field>
-
-    <!-- ✅ Picsum Preview Section -->
-    @if (photos().length > 0) {
+    <!-- Avatar Selection -->
     <div class="picsum-preview">
-      <h4>Picsum Preview ({{ photos().length }} images)</h4>
-
+      <strong>Select an avatar:</strong>
       <div class="photo-grid">
-        @for (p of pagedPhotos(); track p.id) {
-        <img
-          [src]="p.download_url"
-          [alt]="p.author"
-          (click)="selectPhoto(p.download_url)"
-          [class.selected]="selectedPhoto() === p.download_url"
-          [class.unselected]="
-            selectedPhoto() && selectedPhoto() !== p.download_url
-          "
-        />
+        @for(photo of photos(); track photo.id) {
+          <img
+            [src]="photo.download_url"
+            [class.selected]="photo.download_url === selectedAvatar()"
+            (click)="selectAvatar(photo.download_url)"
+            alt="Avatar"
+          />
         }
       </div>
-
       <mat-paginator
-        [length]="photos().length"
+        [length]="totalPhotos()"
         [pageSize]="pageSize"
-        (page)="handlePageChange($event)"
+        [pageSizeOptions]="[8, 12, 24]"
+        (page)="onPageChange($event)"
       ></mat-paginator>
     </div>
-    }
   </mat-dialog-content>
 
+  <!-- Footer -->
   <mat-dialog-actions class="dialog-footer">
-    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-stroked-button color="warn" type="button" (click)="cancel()">
+      Cancel
+    </button>
     <button
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="form.invalid || submitting"
+      [disabled]="form.invalid"
     >
-      Add
+      {{ isEditMode() ? 'Save Changes' : 'Add Member' }}
     </button>
   </mat-dialog-actions>
 </form>

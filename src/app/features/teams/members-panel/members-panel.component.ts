@@ -5,17 +5,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.component';
 import { TeamService } from '../../../core/services/team.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
 
 @Component({
   selector: 'app-members-panel',
   standalone: true,
   imports: [SharedModule],
   templateUrl: './members-panel.component.html',
-  styleUrl: './members-panel.component.css',
+  styleUrls: ['./members-panel.component.css'],
 })
 export class MembersPanelComponent implements OnChanges {
   @Input() team: Team | null = null;
-  @Input() allTeams: Team[] = []; // 👈 new input
+  @Input() allTeams: Team[] = [];
   hasTeam = false;
   displayMembers: any[] = [];
 
@@ -29,7 +30,6 @@ export class MembersPanelComponent implements OnChanges {
       this.displayMembers = this.team.members;
     } else {
       this.hasTeam = false;
-      // 👇 flatten all team members
       this.displayMembers = this.allTeams.flatMap((t) =>
         t.members.map((m) => ({
           ...m,
@@ -39,9 +39,11 @@ export class MembersPanelComponent implements OnChanges {
     }
   }
 
+  // ✏️ Edit Team Dialog
   openEditTeamDialog() {
     if (!this.team?._id) return;
-    const id = this.team._id; // for later use in callback
+    const id = this.team._id;
+
     const ref = this.dialog.open(EditTeamDialogComponent, {
       width: '520px',
       maxHeight: '90vh',
@@ -51,20 +53,47 @@ export class MembersPanelComponent implements OnChanges {
         description: this.team.description,
       },
     });
+
     ref.afterClosed().subscribe((result) => {
       if (!result || !id) return;
       const { teamName, description } = result;
-
-      // reflect changes in the panel immediately
       this.team = { ...this.team, teamName, description } as any;
 
-      // Persist to backend and update global teams store
       this.teamService.updateTeam(id, { teamName, description }).subscribe({
         next: () =>
           this.snack.open('Team updated', 'Close', { duration: 2500 }),
         error: () =>
           this.snack.open('Failed to update team', 'Close', { duration: 3000 }),
       });
+    });
+  }
+
+  // ✏️ Edit Member Dialog
+  openEditMemberDialog(member: any) {
+    if (!this.team?._id) return;
+
+    const ref = this.dialog.open(AddMemberDialogComponent, {
+      width: '520px',
+      maxHeight: '90vh',
+      data: {
+        teamId: this.team._id,
+        member,
+        teams: [this.team],
+      },
+    });
+
+    ref.afterClosed().subscribe((updatedMember) => {
+      if (updatedMember) {
+        const idx = this.team!.members.findIndex((m) => m._id === member._id);
+        if (idx > -1) {
+          this.team!.members[idx] = {
+            ...this.team!.members[idx],
+            ...updatedMember,
+          };
+        }
+        this.snack.open('Member updated', 'Close', { duration: 2500 });
+        console.log('✅ Member updated:', updatedMember);
+      }
     });
   }
 }
