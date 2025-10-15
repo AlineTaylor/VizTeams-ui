@@ -5,10 +5,12 @@ import { SharedModule } from '../../../../shared/shared.module';
 import { PicsumService } from '../../../core/services/picsum.service';
 import { PageEvent } from '@angular/material/paginator';
 import { MemberService } from '../../../core/services/member.service';
+import { TeamService } from '../../../core/services/team.service';
 import { MEMBER_TITLE_OPTIONS } from '../../../../shared/titles.constants';
 
 interface AddMemberData {
   teamId: string;
+  member?: any;
   teams: { _id?: string; teamName: string }[];
 }
 
@@ -20,97 +22,124 @@ interface AddMemberData {
   styleUrls: ['./add-member-dialog.component.css'],
 })
 export class AddMemberDialogComponent implements OnInit {
-  // 🔧 Dependencies
   private fb = inject(FormBuilder);
+  private dialogRef = inject(MatDialogRef<AddMemberDialogComponent>);
   private picsumService = inject(PicsumService);
   private memberService = inject(MemberService);
-
-  dialogRef = inject(MatDialogRef<AddMemberDialogComponent>);
+  private teamService = inject(TeamService);
   data = inject<AddMemberData>(MAT_DIALOG_DATA);
 
-  // 📋 Title dropdown options (shared constant)
-  titleOptions = MEMBER_TITLE_OPTIONS;
+  // ✅ Signals
+  photos = signal<any[]>([]);
+  page = signal(0);
+  pageSize = 12;
+  totalPhotos = signal(0);
+  selectedAvatar = signal<string>('');
 
+  // ✅ Detect Edit Mode
+  isEditMode = computed(() => !!this.data?.member);
+
+  // ✅ Form setup
   form = this.fb.group({
+    teamId: [this.data?.teamId || '', Validators.required],
     firstName: ['', [Validators.required, Validators.minLength(2)]],
     lastName: ['', [Validators.required, Validators.minLength(2)]],
-    title: ['', [Validators.required]],
-    teamId: [this.data.teamId, [Validators.required]],
+    title: ['', Validators.required],
     avatarUrl: [''],
   });
 
-  submitting = false;
+  titleOptions = MEMBER_TITLE_OPTIONS;
 
-  photos = signal<any[]>([]);
-  selectedPhoto = signal<string | null>(null);
-  currentPage = signal(0);
-  readonly pageSize = 5;
+  ngOnInit() {
+    this.loadPhotos();
 
-  pagedPhotos = computed(() => {
-    const start = this.currentPage() * this.pageSize;
-    return this.photos().slice(start, start + this.pageSize);
-  });
+    // ✅ Prefill values if editing an existing member
+    if (this.isEditMode()) {
+      const member = this.data.member;
+      const [firstName, lastName] = (member.name || '').split(' ');
+      this.form.patchValue({
+        firstName,
+        lastName,
+        title: member.title || '',
+        avatarUrl: member.avatarUrl || '',
+      });
+      this.selectedAvatar.set(member.avatarUrl || '');
+    }
+  }
 
-  ngOnInit(): void {
+  // ✅ Load Picsum images
+  loadPhotos() {
     this.picsumService.getPhotos().subscribe({
-      next: (photos) => {
-        console.log('📸 Picsum API Response:', photos);
-        console.log('✅ Total photos:', photos.length);
-        this.photos.set(photos);
+      next: (res) => {
+        this.totalPhotos.set(res.length);
+        const start = this.page() * this.pageSize;
+        this.photos.set(res.slice(start, start + this.pageSize));
       },
-      error: (err) => console.error('❌ Error fetching Picsum photos:', err),
+      error: (err) => console.error('Error fetching Picsum photos:', err),
     });
   }
 
-  selectPhoto(url: string): void {
-    this.selectedPhoto.set(url);
-    this.form.patchValue({ avatarUrl: url });
+  onPageChange(event: PageEvent) {
+    this.page.set(event.pageIndex);
+    this.pageSize = event.pageSize;
+    this.loadPhotos();
   }
 
-  handlePageChange(event: PageEvent): void {
-    this.currentPage.set(event.pageIndex);
+  selectAvatar(photoUrl: string) {
+    this.selectedAvatar.set(photoUrl);
+    this.form.patchValue({ avatarUrl: photoUrl });
   }
 
-  getSelectedAvatar(): string {
-  return (
-    this.selectedPhoto() ||
-    this.photos()[0]?.download_url ||
-    '/avatar.png'
-  );
-}
-
-  submit(): void {
-  if (this.form.invalid) {
-    this.form.markAllAsTouched();
-    return;
+  getSelectedAvatar() {
+    return this.selectedAvatar() || this.form.value.avatarUrl || '';
   }
 
-  this.submitting = true;
-  const value = this.form.value;
+  // ✅ Unified Submit for Add / Edit
+  submit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
-  const member = {
-    firstName: value.firstName?.trim(),
-    lastName: value.lastName?.trim(),
-    title: value.title?.trim(),
-    avatarUrl: value.avatarUrl?.trim() || this.getSelectedAvatar(),
-  };
+    const { firstName, lastName, title, teamId } = this.form.value;
+    const avatarUrl = this.getSelectedAvatar();
 
-  this.memberService.addMember(value.teamId!, member).subscribe({
-    next: (res: any) => {
-      const updatedTeam = res.team || res;
-      console.log('✅ Member saved:', updatedTeam);
+    const member = {
+      firstName: firstName!.trim(),
+      lastName: lastName!.trim(),
+      title: title!,
+      avatarUrl: avatarUrl.trim(),
+    };
 
-      this.dialogRef.close(updatedTeam);
-      this.submitting = false;
-    },
-    error: (err) => {
-      console.error('❌ Error saving member:', err);
-      this.submitting = false;
-    },
-  });
-}
+    if (this.isEditMode()) {
+      // ✅ Persist member update to backend
+      const memberId = this.data.member._id!;
+      this.memberService.updateMember(teamId!, memberId, member).subscribe({
+        next: (res) => {
+          console.log('✅ Member updated on backend:', res);
+          this.teamService.loadTeams(); // reload teams to reflect update
+          this.dialogRef.close(res);
+        },
+        error: (err) => {
+          console.error('❌ Failed to update member:', err);
+        },
+      });
+    } else {
+      // ✅ Add new member
+      this.memberService.addMember(teamId!, member).subscribe({
+        next: (res) => {
+          console.log('✅ Member added:', res);
+          this.teamService.loadTeams();
+          this.dialogRef.close(res);
+        },
+        error: (err) => {
+          console.error('❌ Failed to add member:', err);
+        },
+      });
+    }
+  }
 
-  cancel(): void {
+  cancel() {
     this.dialogRef.close();
   }
 }

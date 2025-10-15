@@ -129,4 +129,9 @@ export class TeamService {
         error: (err) => console.error('Error adding member:', err),
       });
   }
+
+  /** Return a snapshot of all teams (current BehaviorSubject value) */
+getCurrentTeams(): Team[] {
+  return this.teamsSubject.value;
+  }
 }
