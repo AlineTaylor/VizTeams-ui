@@ -61,7 +61,11 @@
             }
           </div>
           } @else {
-          <div class="empty">No members yet.</div>
+          <div class="empty">No members on this team.</div>
+          }
+
+          @if (capacityNotice[team._id!]) {
+            <span class="text-error capacity-msg capacity-fade">Team size limited to {{ TEAM_CAPACITY }} members</span>
           }
 
           <span class="count">
@@ -72,9 +76,6 @@
             mat-icon-button
             class="add-member-btn"
             (click)="onAddMember(team)"
-            [disabled]="isTeamFull(team)"
-            [matTooltip]="isTeamFull(team) ? 'Team is at capacity' : 'Add Member'"
-            matTooltipPosition="above"
           >
             <mat-icon>person_add</mat-icon>
           </button>

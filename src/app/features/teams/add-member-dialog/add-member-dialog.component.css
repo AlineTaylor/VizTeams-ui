@@ -20,6 +20,15 @@
   margin-left: 12px;
 }
 
+.dialog-footer .left-actions {
+  display: flex;
+  align-items: center;
+}
+
+.dialog-footer .spacer {
+  flex: 1 1 auto;
+}
+
 .picsum-preview {
   margin-top: 16px;
 }

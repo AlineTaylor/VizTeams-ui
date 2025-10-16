@@ -21,4 +21,20 @@ export class MemberService {
 
     return this.http.post<Team>(this.apiUrl, payload);
   }
+
+  updateMember(
+    teamId: string,
+    memberId: string,
+    updates: any
+  ): Observable<any> {
+    const url = `${environment.apiUrl}/api/members/${teamId}/members/${memberId}`;
+    return this.http.put(url, updates, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  removeMember(teamId: string, memberId: string): Observable<any> {
+    const url = `${environment.apiUrl}/api/members/${teamId}/members/${memberId}`;
+    return this.http.delete(url);
+  }
 }

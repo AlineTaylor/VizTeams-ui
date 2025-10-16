@@ -1,6 +1,15 @@
 <mat-toolbar class="header">
   <div class="title">
-    <img src="/vizient-logo-registered.svg" alt="Vizient logo" />
+    <img
+      src="/vizient-logo-registered.svg"
+      alt="Vizient logo"
+      class="logo"
+      matTooltip="Reload page to reset teams"
+      matTooltipPosition="below"
+      matTooltipShowDelay="400"
+      (click)="onLogoClick()"
+    />
+
     <span>VizTeams</span>
   </div>
   <!-- "Sign In" and "Sign Up" when not logged in -->
