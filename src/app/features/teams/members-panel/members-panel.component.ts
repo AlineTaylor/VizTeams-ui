@@ -6,6 +6,8 @@ import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.co
 import { TeamService } from '../../../core/services/team.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
+import { MemberService } from '../../../core/services/member.service';
+import { ConfirmDialogComponent } from '../../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-members-panel',
@@ -23,6 +25,7 @@ export class MembersPanelComponent implements OnChanges {
   private dialog = inject(MatDialog);
   private teamService = inject(TeamService);
   private snack = inject(MatSnackBar);
+  private memberService = inject(MemberService);
 
   ngOnChanges() {
     if (this.team) {
@@ -83,6 +86,18 @@ export class MembersPanelComponent implements OnChanges {
     });
 
     ref.afterClosed().subscribe((updatedMember) => {
+      if (updatedMember?.__removed) {
+        const removedId = updatedMember.memberId;
+        if (this.team) {
+          this.team.members = this.team.members.filter(
+            (m) => m._id !== removedId
+          );
+          this.displayMembers = this.team.members;
+        }
+        this.snack.open('Member removed', 'Close', { duration: 2500 });
+        return;
+      }
+
       if (updatedMember) {
         const idx = this.team!.members.findIndex((m) => m._id === member._id);
         if (idx > -1) {
@@ -94,6 +109,47 @@ export class MembersPanelComponent implements OnChanges {
         this.snack.open('Member updated', 'Close', { duration: 2500 });
         console.log('✅ Member updated:', updatedMember);
       }
+    });
+  }
+
+  // Remove member from current team
+  confirmRemoveFromTeam(member: any) {
+    if (!this.team?._id) return;
+    const teamId = this.team._id;
+
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      width: '420px',
+      data: {
+        title: 'Remove Member',
+        message: `Remove ${member.name || 'this member'} from ${
+          this.team.teamName
+        }?`,
+        confirmText: 'Remove',
+        cancelText: 'Keep',
+      },
+    });
+
+    ref.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.memberService.removeMember(teamId, member._id).subscribe({
+        next: () => {
+          // Update local state
+          this.team!.members = this.team!.members.filter(
+            (m) => m._id !== member._id
+          );
+          this.displayMembers = this.team!.members;
+          // Sync from backend
+          this.teamService.loadTeams();
+          this.snack.open('Member removed from team', 'Close', {
+            duration: 2500,
+          });
+        },
+        error: () =>
+          this.snack.open('Failed to remove member', 'Close', {
+            duration: 3000,
+          }),
+      });
     });
   }
 }

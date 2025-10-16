@@ -1,3 +1,26 @@
+.capacity-msg {
+  font-size: 12px;
+  margin-right: 8px;
+  align-self: center;
+}
+
+.team-members-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.team-members-strip .avatars {
+  flex: 1 1 auto;
+}
+
+.team-members-strip .count {
+  margin: 0 8px;
+}
+
+.team-members-strip .add-member-btn {
+  margin-right: 4px;
+}
 .team-list-card {
   display: flex;
   flex-direction: column;
@@ -179,6 +202,23 @@
   line-height: 22px;
 }
 
+/* visually disabled state while still allowing click for error message */
+.capacity-fade {
+  animation: capacityFadeOut 3s ease-in forwards;
+}
+
+@keyframes capacityFadeOut {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .loading-bar {
   transition: opacity 0.3s ease;
   display: block;
@@ -192,4 +232,3 @@
 .team-list-container {
   position: relative;
 }
-

@@ -27,16 +27,28 @@
         </div>
       </div>
 
-      <!-- ✏️ Edit button per member -->
+      <!-- ✏️ Edit and Remove buttons per member -->
       @if (hasTeam) {
-      <button
-        mat-icon-button
-        color="primary"
-        matTooltip="Edit Member"
-        (click)="openEditMemberDialog(m)"
-      >
-        <mat-icon>edit</mat-icon>
-      </button>
+      <div class="row-actions">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="Edit Member"
+          aria-label="Edit member"
+          (click)="openEditMemberDialog(m)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="Remove this member from this team"
+          aria-label="Remove member from this team"
+          (click)="confirmRemoveFromTeam(m)"
+        >
+          <mat-icon>person_remove</mat-icon>
+        </button>
+      </div>
       }
     </div>
     } @empty {
