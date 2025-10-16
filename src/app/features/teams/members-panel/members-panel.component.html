@@ -11,19 +11,45 @@
   <div class="members-grid">
     @for (m of displayMembers; track m._id) {
     <div class="member-tile">
-      @if (m.avatarUrl) {
-      <img class="member-avatar avatar" [src]="m.avatarUrl" [alt]="m.name" />
-      } @else {
-      <img class="member-avatar avatar placeholder" src="/avatar.png" />
-      }
-
-      <div class="meta">
-        <div class="name">{{ m.name }}</div>
-        <div class="role">{{ m.title }}</div>
-        @if (!hasTeam) {
-        <div class="team">({{ m.teamName }})</div>
+      <div class="member-left">
+        @if (m.avatarUrl) {
+        <img class="member-avatar" [src]="m.avatarUrl" [alt]="m.name" />
+        } @else {
+        <img class="member-avatar placeholder" src="/avatar.png" />
         }
+
+        <div class="meta">
+          <div class="name">{{ m.name }}</div>
+          <div class="role">{{ m.title }}</div>
+          @if (!hasTeam) {
+          <div class="team">({{ m.teamName }})</div>
+          }
+        </div>
       </div>
+
+      <!-- ✏️ Edit and Remove buttons per member -->
+      @if (hasTeam) {
+      <div class="row-actions">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="Edit Member"
+          aria-label="Edit member"
+          (click)="openEditMemberDialog(m)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="Remove this member from this team"
+          aria-label="Remove member from this team"
+          (click)="confirmRemoveFromTeam(m)"
+        >
+          <mat-icon>person_remove</mat-icon>
+        </button>
+      </div>
+      }
     </div>
     } @empty {
     <div class="empty">No members.</div>
@@ -31,7 +57,10 @@
   </div>
   } @else {
   <div class="members-placeholder">No members available.</div>
-  } @if (hasTeam) {
+  }
+
+  <!-- Footer -->
+  @if (hasTeam) {
   <div class="panel-footer">
     <span class="spacer"></span>
     <button

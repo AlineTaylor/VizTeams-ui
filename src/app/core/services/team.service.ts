@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, catchError, of, tap } from 'rxjs';
 import { Team, TeamMember } from '../../../shared/models/team.models';
@@ -9,8 +9,7 @@ export class TeamService {
   private apiUrl = `${environment.apiUrl}/api/teams`;
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token');
     return new HttpHeaders({
@@ -128,5 +127,10 @@ export class TeamService {
         },
         error: (err) => console.error('Error adding member:', err),
       });
+  }
+
+  /** Return a snapshot of all teams (current BehaviorSubject value) */
+  getCurrentTeams(): Team[] {
+    return this.teamsSubject.value;
   }
 }
