@@ -87,3 +87,24 @@ mat-paginator {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
+/* 🆕 Spinner + Text alignment inside the Save button */
+.save-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+  gap: 8px;
+  padding: 0 20px;
+}
+
+.spinner-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.save-btn mat-spinner {
+  width: 16px !important;
+  height: 16px !important;
+}

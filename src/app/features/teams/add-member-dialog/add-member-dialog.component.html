@@ -73,12 +73,15 @@
       color="primary"
       type="submit"
       [disabled]="form.invalid || submitting"
+      class="save-btn"
     >
       @if (submitting) {
-        <mat-spinner diameter="20"></mat-spinner>
-        Saving...
+      <span class="spinner-wrapper">
+        <mat-spinner diameter="16" strokeWidth="3"></mat-spinner>
+        <span>Saving...</span>
+      </span>
       } @else {
-        {{ isEditMode() ? "Save Changes" : "Add Member" }}
+      {{ isEditMode() ? "Save Changes" : "Add Member" }}
       }
     </button>
   </mat-dialog-actions>
