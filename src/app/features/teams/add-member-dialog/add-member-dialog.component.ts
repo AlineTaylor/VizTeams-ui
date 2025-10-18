@@ -7,6 +7,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MemberService } from '../../../core/services/member.service';
 import { TeamService } from '../../../core/services/team.service';
 import { MEMBER_TITLE_OPTIONS } from '../../../../shared/titles.constants';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 interface AddMemberData {
   teamId: string;
@@ -17,7 +18,7 @@ interface AddMemberData {
 @Component({
   selector: 'app-add-member-dialog',
   standalone: true,
-  imports: [SharedModule],
+  imports: [SharedModule, MatProgressSpinnerModule],
   templateUrl: './add-member-dialog.component.html',
   styleUrls: ['./add-member-dialog.component.css'],
 })
@@ -49,6 +50,8 @@ export class AddMemberDialogComponent implements OnInit {
   });
 
   titleOptions = MEMBER_TITLE_OPTIONS;
+
+  submitting = false; // 🆕 Track button state
 
   ngOnInit() {
     this.loadPhotos();
@@ -101,6 +104,8 @@ export class AddMemberDialogComponent implements OnInit {
       return;
     }
 
+    this.submitting = true; // 🆕 Disable button immediately
+
     const { firstName, lastName, title, teamId } = this.form.value;
     const avatarUrl = this.getSelectedAvatar();
 
@@ -117,11 +122,15 @@ export class AddMemberDialogComponent implements OnInit {
       this.memberService.updateMember(teamId!, memberId, member).subscribe({
         next: (res) => {
           console.log('✅ Member updated on backend:', res);
-          this.teamService.loadTeams(); // reload teams to reflect update
+          this.teamService.loadTeams();
           this.dialogRef.close(res);
         },
         error: (err) => {
           console.error('❌ Failed to update member:', err);
+          this.submitting = false;
+        },
+        complete: () => {
+          this.submitting = false;
         },
       });
     } else {
@@ -134,6 +143,10 @@ export class AddMemberDialogComponent implements OnInit {
         },
         error: (err) => {
           console.error('❌ Failed to add member:', err);
+          this.submitting = false;
+        },
+        complete: () => {
+          this.submitting = false;
         },
       });
     }

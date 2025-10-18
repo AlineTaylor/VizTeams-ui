@@ -72,9 +72,14 @@
       mat-raised-button
       color="primary"
       type="submit"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || submitting"
     >
-      {{ isEditMode() ? "Save Changes" : "Add Member" }}
+      @if (submitting) {
+        <mat-spinner diameter="20"></mat-spinner>
+        Saving...
+      } @else {
+        {{ isEditMode() ? "Save Changes" : "Add Member" }}
+      }
     </button>
   </mat-dialog-actions>
 </form>
