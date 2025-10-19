@@ -8,11 +8,15 @@ import { TeamService } from '../../../core/services/team.service';
 import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
 import { delay } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 
 @Component({
   selector: 'app-team-list',
   standalone: true,
-  imports: [SharedModule, MatProgressBarModule],
+  imports: [SharedModule, MatProgressBarModule, DragDropModule, MatTooltipModule],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css',
 })
@@ -173,4 +177,24 @@ export class TeamListComponent implements OnInit {
   }
 
   trackMember = (_: number, m: any) => m._id || m.name;
+
+  onDropMember(event: CdkDragDrop<any[]>, team: Team) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(team.members, event.previousIndex, event.currentIndex);
+      console.log(`${team.teamName} reordered:`, team.members);
+
+      if (team._id) {
+      this.teamService.updateMemberOrder(team._id, team.members).subscribe({
+        next: (updatedTeam) => {
+          console.log("✅ Order saved to backend:", updatedTeam);
+          this.snack.open('Member order updated', 'Close', { duration: 2000 });
+        },
+        error: (err) => {
+          console.error('❌ Failed to save order:', err);
+          this.snack.open('Failed to save order', 'Close', { duration: 2000 });
+        },
+      });
+    }
+  }
+}
 }

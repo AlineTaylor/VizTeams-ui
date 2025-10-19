@@ -37,10 +37,18 @@
         <div class="team-members-strip">
           @if (team.members.length > 0) {
           <div class="avatars">
+          <!-- ✅ Draggable + Reorderable Member Avatars -->
+          <div
+            class="avatars"
+            cdkDropList
+            [cdkDropListData]="team.members"
+            (cdkDropListDropped)="onDropMember($event, team)"
+          >
             @for (m of getDisplayedMembers(team); track trackMember($index, m))
             {
             <div
               class="avatar-tile"
+              cdkDrag
               [matTooltip]="m.name + (m.title ? ' — ' + m.title : '')"
               matTooltipPosition="above"
             >
@@ -61,6 +69,7 @@
             </div>
             }
           </div>
+
           } @else {
           <div class="empty">No members on this team.</div>
           } @if (capacityNotice[team._id!]) {
