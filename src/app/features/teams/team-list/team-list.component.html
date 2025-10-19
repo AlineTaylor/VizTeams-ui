@@ -5,11 +5,8 @@
 
   <!-- ✅ Loading bar at top -->
   @if (loading()) {
-    <mat-progress-bar
-      mode="indeterminate"
-      color="accent"
-      class="loading-bar">
-    </mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" color="accent" class="loading-bar">
+  </mat-progress-bar>
   }
 
   <div class="teams-scroll">
@@ -23,7 +20,9 @@
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.teamName }}</mat-panel-title>
           <mat-panel-description>
-            {{ team.members.length }} member{{ team.members.length === 1 ? '' : 's' }}
+            {{ team.members.length }} member{{
+              team.members.length === 1 ? "" : "s"
+            }}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -38,7 +37,8 @@
         <div class="team-members-strip">
           @if (team.members.length > 0) {
           <div class="avatars">
-            @for (m of getDisplayedMembers(team); track trackMember($index, m)) {
+            @for (m of getDisplayedMembers(team); track trackMember($index, m))
+            {
             <div
               class="avatar-tile"
               [matTooltip]="m.name + (m.title ? ' — ' + m.title : '')"
@@ -50,11 +50,12 @@
                 class="avatar-img"
               />
             </div>
-            }
-            @if (team.members.length > maxAvatars) {
+            } @if (team.members.length > maxAvatars) {
             <div
               class="more-count"
-              [matTooltip]="team.members.length - maxAvatars + ' more member(s)'"
+              [matTooltip]="
+                team.members.length - maxAvatars + ' more member(s)'
+              "
             >
               +{{ team.members.length - maxAvatars }}
             </div>
@@ -62,10 +63,10 @@
           </div>
           } @else {
           <div class="empty">No members on this team.</div>
-          }
-
-          @if (capacityNotice[team._id!]) {
-            <span class="text-error capacity-msg capacity-fade">Team size limited to {{ TEAM_CAPACITY }} members</span>
+          } @if (capacityNotice[team._id!]) {
+          <span class="text-error capacity-msg capacity-fade"
+            >Team size limited to {{ TEAM_CAPACITY }} members</span
+          >
           }
 
           <span class="count">
@@ -87,29 +88,29 @@
     </mat-accordion>
   </div>
 
-  <div class="bottom-divider"></div>
-
-  @if (selectedTeam) {
-  <button
-    mat-icon-button
-    color="warn"
-    class="add-team-square"
-    style="right: 70px"
-    (click)="deleteSelectedTeam()"
-    matTooltip="Delete Selected Team"
-    matTooltipPosition="above"
-  >
-    <span style="font-size: 20px; font-weight: bold">×</span>
-  </button>
-  }
-
-  <button
-    mat-icon-button
-    class="add-team-square"
-    (click)="openAddTeamDialog()"
-    matTooltip="Add Team"
-    matTooltipPosition="above"
-  >
-    +
-  </button>
+  <div class="panel-footer">
+    <span class="spacer"></span>
+    @if (selectedTeam) {
+    <button
+      mat-icon-button
+      class="delete-team-btn"
+      (click)="deleteSelectedTeam()"
+      matTooltip="Delete Selected Team"
+      matTooltipPosition="above"
+      aria-label="Delete selected team"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+    }
+    <button
+      mat-icon-button
+      class="add-team-btn"
+      (click)="openAddTeamDialog()"
+      matTooltip="Add Team"
+      matTooltipPosition="above"
+      aria-label="Add team"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
 </mat-card>

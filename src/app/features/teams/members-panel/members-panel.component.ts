@@ -22,6 +22,16 @@ export class MembersPanelComponent implements OnChanges {
   hasTeam = false;
   displayMembers: any[] = [];
 
+  // Total member counter (used for default 'All Members' view)
+  get totalMembers(): number {
+    if (this.hasTeam) return this.team?.members?.length || 0;
+    if (!this.allTeams?.length) return 0;
+    return this.allTeams.reduce(
+      (sum, t) => sum + (Array.isArray(t.members) ? t.members.length : 0),
+      0
+    );
+  }
+
   private dialog = inject(MatDialog);
   private teamService = inject(TeamService);
   private snack = inject(MatSnackBar);

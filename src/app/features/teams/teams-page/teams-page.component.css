@@ -3,6 +3,7 @@
   flex-direction: row;
   align-items: stretch;
   justify-content: stretch;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
 }
 
 .teams-page > app-team-list,

@@ -26,7 +26,7 @@
   flex-direction: column;
   flex: 1 1 0;
   min-width: 0;
-  height: calc(100vh - 120px); /* full-height minus header */
+  height: calc(100vh - var(--header-height) - var(--footer-height) - 64px);
   margin: 32px 0 32px 32px;
   padding: 0;
   background: var(--color-bg);
@@ -138,38 +138,45 @@
   padding-right: 4px;
 }
 
-.bottom-divider {
-  position: absolute;
-  bottom: 60px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: var(--color-border-alt);
-}
-
-.add-team-square {
-  position: absolute;
-  bottom: 16px;
-  right: 24px;
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 4px;
-  background-color: var(--color-accent-alt);
-  color: var(--color-text-alt);
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
+.panel-footer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 8px 16px 16px 16px;
+  margin-top: auto;
+  border-top: 2px solid var(--color-border-alt);
+  background: var(--color-bg);
+}
+.panel-footer .spacer {
+  flex: 1;
+}
+.add-team-btn,
+.delete-team-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background-color: var(--color-accent-alt);
+  color: var(--color-text-alt) !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  --mdc-icon-button-state-layer-size: 32px;
+  --mdc-icon-button-icon-size: 20px;
 }
-
-.add-team-square:hover {
+.add-team-btn:hover,
+.delete-team-btn:hover {
   background-color: var(--color-accent);
   transform: scale(1.05);
+}
+.add-team-btn mat-icon,
+.delete-team-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
 }
 
 /* mat-action-row inside expansion panel */
