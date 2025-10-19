@@ -4,7 +4,9 @@
     @if (hasTeam) {
     <h3 class="team-name">{{ team!.teamName }}</h3>
     } @else {
-    <h3 class="team-name">All Members</h3>
+    <h3 class="team-name">
+      All Members <span class="total-count">({{ totalMembers }})</span>
+    </h3>
     }
   </div>
 
