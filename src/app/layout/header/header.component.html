@@ -14,16 +14,40 @@
   </div>
   <!-- "Sign In" and "Sign Up" when not logged in -->
   @if(!(user$ | async); as noUser){
-  <div class="user" mat-button>
-    <button mat-stroked-button (click)="openLogin()">Sign in</button>
-    <button mat-stroked-button (click)="openSignup()">Sign up</button>
-  </div>
+  <button
+    matIconButton
+    [matMenuTriggerFor]="menu"
+    class="auth-trigger"
+    aria-label="Authentication menu"
+    matTooltip="Log in / Sign up"
+    aria-haspopup="menu"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="openLogin()">
+      <mat-icon>login</mat-icon>
+      <span>Sign In</span>
+    </button>
+    <button mat-menu-item (click)="openSignup()">
+      <mat-icon>account_box</mat-icon>
+      <span>Sign Up</span>
+    </button>
+  </mat-menu>
   }
   <!-- Email/username and logout when logged in -->
   @if(user$ | async; as user){
   <div class="user" mat-button>
     <span>{{ user.email || user.username }}</span>
-    <button mat-button color="primary" (click)="logout()">Logout</button>
+    <button
+      mat-button
+      color="primary"
+      class="auth-trigger"
+      matTooltip="Log out"
+      (click)="logout()"
+    >
+      <mat-icon>logout</mat-icon>
+    </button>
   </div>
   }
 </mat-toolbar>
