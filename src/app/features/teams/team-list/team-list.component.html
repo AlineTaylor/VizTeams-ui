@@ -5,8 +5,11 @@
 
   <!-- ✅ Loading bar at top -->
   @if (loading()) {
-  <mat-progress-bar mode="indeterminate" color="accent" class="loading-bar">
-  </mat-progress-bar>
+  <mat-progress-bar
+    mode="indeterminate"
+    color="accent"
+    class="loading-bar"
+  ></mat-progress-bar>
   }
 
   <div class="teams-scroll">
@@ -20,13 +23,12 @@
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.teamName }}</mat-panel-title>
           <mat-panel-description>
-            {{ team.members.length }} member{{
-              team.members.length === 1 ? "" : "s"
-            }}
+            {{ team.members.length }}
+            member{{ team.members.length === 1 ? "" : "s" }}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <!-- Team Description -->
+        <!-- 🟧 Team Description -->
         @if (team.description) {
         <div class="team-description">
           <strong>Description:</strong> {{ team.description }}
@@ -36,7 +38,6 @@
         <!-- ✅ Team Members (Avatar Strip) -->
         <div class="team-members-strip">
           @if (team.members.length > 0) {
-          <div class="avatars">
           <!-- ✅ Draggable + Reorderable Member Avatars -->
           <div
             class="avatars"
@@ -69,13 +70,12 @@
             </div>
             }
           </div>
-
           } @else {
           <div class="empty">No members on this team.</div>
           } @if (capacityNotice[team._id!]) {
-          <span class="text-error capacity-msg capacity-fade"
-            >Team size limited to {{ TEAM_CAPACITY }} members</span
-          >
+          <span class="text-error capacity-msg capacity-fade">
+            Team size limited to {{ TEAM_CAPACITY }} members
+          </span>
           }
 
           <span class="count">
@@ -111,6 +111,7 @@
       <mat-icon>delete</mat-icon>
     </button>
     }
+
     <button
       mat-icon-button
       class="add-team-btn"
