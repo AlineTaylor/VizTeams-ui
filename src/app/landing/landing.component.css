@@ -1,0 +1,12 @@
+.landing-wrapper {
+  padding: 48px 32px;
+  max-width: 480px;
+}
+h1 {
+  margin: 0 0 8px;
+  font-size: 1.75rem;
+}
+p {
+  margin: 0 0 24px;
+  opacity: 0.8;
+}

@@ -13,6 +13,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [],
@@ -31,6 +32,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTooltipModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatMenuModule,
   ],
   exports: [
     CommonModule,
@@ -47,6 +49,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     MatTooltipModule,
     MatSelectModule,
     MatPaginatorModule,
+    MatMenuModule,
   ],
 })
 export class SharedModule {}

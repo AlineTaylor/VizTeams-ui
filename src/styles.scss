@@ -32,6 +32,10 @@
   --color-success: var(--viz-success);
   --color-warning: var(--viz-warning);
   --color-error: var(--viz-red);
+
+  /* Layout sizing tokens */
+  --header-height: 64px;
+  --footer-height: calc(var(--header-height) * 0.8);
 }
 
 /* Typography */
@@ -95,6 +99,20 @@ div.mat-mdc-form-field-icon-suffix {
 }
 
 //Add team dialog styles
+/* Angular Material menu: ensure dropdown text and icons use semantic default text color */
+.mat-mdc-menu-panel,
+.mat-mdc-menu-content,
+.mat-mdc-menu-item,
+.mat-mdc-menu-item .mdc-list-item__primary-text {
+  color: var(--color-text) !important;
+}
+
+.mat-mdc-menu-item mat-icon,
+.mat-mdc-menu-item .mat-icon,
+.mat-mdc-menu-item .mdc-list-item__graphic {
+  color: var(--color-text) !important;
+}
+
 ::ng-deep .custom-add-team-dialog .mat-mdc-dialog-container {
   width: 700px !important;
   max-width: 90vw !important;
