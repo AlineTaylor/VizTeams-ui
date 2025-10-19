@@ -10,7 +10,7 @@
       (click)="onLogoClick()"
     />
 
-    <span>VizTeams</span>
+  <a routerLink="/teams" class="app-title-link">VizTeams</a>
   </div>
   <!-- "Sign In" and "Sign Up" when not logged in -->
   @if(!(user$ | async); as noUser){
@@ -33,21 +33,36 @@
       <mat-icon>account_box</mat-icon>
       <span>Sign Up</span>
     </button>
+    <button mat-menu-item routerLink="/contact">
+      <mat-icon>info</mat-icon>
+      <span>Contact</span>
+    </button>
   </mat-menu>
   }
   <!-- Email/username and logout when logged in -->
   @if(user$ | async; as user){
-  <div class="user" mat-button>
+  <div class="user">
     <span>{{ user.email || user.username }}</span>
-    <button
-      mat-button
-      color="primary"
-      class="auth-trigger"
-      matTooltip="Log out"
-      (click)="logout()"
-    >
-      <mat-icon>logout</mat-icon>
-    </button>
   </div>
+  <button
+    matIconButton
+    [matMenuTriggerFor]="menu"
+    class="auth-trigger"
+    aria-label="Authentication menu"
+    matTooltip="Log out"
+    aria-haspopup="menu"
+  >
+    <mat-icon>person</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Log Out</span>
+    </button>
+    <button mat-menu-item routerLink="/contact">
+      <mat-icon>info</mat-icon>
+      <span>Contact</span>
+    </button>
+  </mat-menu>
   }
 </mat-toolbar>

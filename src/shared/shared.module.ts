@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
@@ -19,6 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
   declarations: [],
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatToolbarModule,
     MatDialogModule,
@@ -36,6 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
   ],
   exports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MatToolbarModule,
     MatDialogModule,

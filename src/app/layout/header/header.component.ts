@@ -5,11 +5,12 @@ import { SignupComponent } from '../../features/auth/signup/signup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticationService } from '../../core/services/authentication.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [SharedModule, MatTooltipModule],
+  imports: [SharedModule, MatTooltipModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
@@ -20,8 +21,8 @@ export class HeaderComponent {
   user$ = this.authService.user$;
 
   onLogoClick() {
-  window.location.reload();
-}
+    window.location.reload();
+  }
 
   openLogin() {
     this.dialog.open(LoginComponent);

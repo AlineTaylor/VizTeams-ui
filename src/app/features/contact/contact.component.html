@@ -1,0 +1,175 @@
+<section class="info-container">
+  <h1>Contact</h1>
+  <!-- Contact Form-->
+  <div class="contact-us-container">
+    <div class="section-header">
+      <h2>Send us a message!</h2>
+    </div>
+    <form
+      class="contact-form"
+      #contactForm="ngForm"
+      (ngSubmit)="onSubmit(contactForm)"
+    >
+      <mat-form-field appearance="fill">
+        <label for="name">Name:</label>
+
+        <input
+          matInput
+          type="text"
+          id="name"
+          name="name"
+          required
+          placeholder="What is your name?"
+          [(ngModel)]="name"
+      /></mat-form-field>
+      <mat-form-field appearance="fill">
+        <label for="email">Email:</label>
+        <input
+          matInput
+          type="email"
+          id="email"
+          name="email"
+          required
+          placeholder="How can we reach you?"
+          [(ngModel)]="email" /></mat-form-field
+      ><mat-form-field appearance="fill">
+        <label for="subject">Subject:</label>
+        <input
+          matInput
+          type="text"
+          id="subject"
+          name="subject"
+          required
+          [(ngModel)]="subject" /></mat-form-field
+      ><mat-form-field appearance="fill">
+        <label for="message">Message:</label>
+        <textarea
+          matInput
+          id="message"
+          name="message"
+          required
+          [(ngModel)]="message"
+        ></textarea>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        title="Send"
+        [disabled]="contactForm.invalid"
+      >
+        Send
+      </button>
+    </form>
+  </div>
+  <!-- Meet the team section-->
+  <div class="meet-the-team-container">
+    <div class="section-header">
+      <h2>Meet the team</h2>
+    </div>
+    <ul class="team-list">
+      <li class="team-member-card">
+        <mat-card>
+          <mat-card-header>
+            <div class="social-buttons">
+              <button
+                class="social-media-button"
+                title="Connect with Aline on LinkedIn"
+                matTooltip="Connect with Aline on LinkedIn"
+              >
+                <a
+                  href="https://www.linkedin.com/in/aline-taylor/"
+                  target="_blank"
+                  ><img src="/linkedin-logo.png" height="40rem"
+                /></a>
+              </button>
+              <button
+                class="social-media-button"
+                title="See Aline's work on GitHub"
+                matTooltip="See Aline's work on GitHub"
+              >
+                <a href="https://github.com/AlineTaylor" target="_blank"
+                  ><img src="/github-logo.png" height="40rem"
+                /></a>
+              </button>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <img
+              title="Aline Taylor"
+              matTooltip="Aline Taylor"
+              class="profile-picture"
+              src="/aline-taylor.jpg"
+              alt="Aline Taylor"
+              height="50px"
+            />
+
+            <div class="team-member-info">
+              <h3 class="profile-name">Aline Taylor</h3>
+              <h4 class="profile-occupation">Full-Stack Developer</h4>
+              <p class="profile-description">
+                I thrive at the intersection of creativity and code, with
+                hands-on experience in building component-driven applications
+                using Angular. 💻 With a background in project coordination,
+                data analysis, and technical writing, I have a knack for turning
+                complex ideas into polished, user-centered interfaces. Currently
+                expanding my full-stack skills, always with the end user in mind
+                — because the best code is the kind that just feels right. ✨
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </li>
+      <li class="team-member-card">
+        <mat-card>
+          <mat-card-header>
+            <div class="social-buttons">
+              <button
+                class="social-media-button"
+                title="Connect with Matt on LinkedIn"
+                matTooltip="Connect with Matt on LinkedIn"
+              >
+                <a
+                  href="https://www.linkedin.com/in/mthiggins1s/"
+                  target="_blank"
+                  ><img src="/linkedin-logo.png" height="40rem"
+                /></a>
+              </button>
+              <button
+                class="social-media-button"
+                title="See Matt's work on GitHub"
+                matTooltip="See Matt's work on GitHub"
+              >
+                <a href="https://github.com/mthiggins1s" target="_blank"
+                  ><img src="/github-logo.png" height="40rem"
+                /></a>
+              </button>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <img
+              title="Matt Higgins"
+              matTooltip="Matt Higgins"
+              class="profile-picture"
+              src="/matt-higgins.jpeg"
+              alt="Matt Higgins"
+              height="50px"
+            />
+
+            <div class="team-member-info">
+              <h3 class="profile-name">Matt Higgins</h3>
+              <h4 class="profile-occupation">Full-Stack Developer</h4>
+              <p class="profile-description">
+                Experienced Drone Pilot, Tech Enthusiast, Proficient in
+                Microsoft Office & Adobe Suite, Passionate about leveraging
+                digital tools for creative solutions and impactful results.
+                Let's connect and collaborate!
+              </p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </li>
+    </ul>
+  </div>
+</section>

@@ -17,17 +17,20 @@
   color: var(--color-text);
 }
 
-.logo {
+.logo-link {
   grid-column: 3;
   justify-self: end;
+  display: inline-flex;
+  align-items: center;
 }
 
-.logo:hover {
-  transform: scale(1.05);
-}
 .logo {
   height: clamp(20px, calc(var(--footer-height) - 16px), 28px);
   margin: 0 16px;
   cursor: pointer;
   transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
