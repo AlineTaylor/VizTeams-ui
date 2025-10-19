@@ -21,6 +21,7 @@
 .team-members-strip .add-member-btn {
   margin-right: 4px;
 }
+
 .team-list-card {
   display: flex;
   flex-direction: column;
@@ -58,6 +59,7 @@
   cursor: pointer;
   border-radius: 4px;
 }
+
 .team-item:hover {
   background: var(--color-bg-alt);
 }
@@ -92,16 +94,19 @@
   overflow-x: auto;
   scrollbar-width: none;
 }
+
 .team-members-strip .avatars::-webkit-scrollbar {
   display: none;
 }
+
 .avatar-tile {
   width: 40px;
   height: 40px;
   border-radius: 2px;
   overflow: hidden;
   background: var(--color-bg-alt);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,15 +114,18 @@
   flex: 0 0 40px;
   position: relative;
 }
+
 .avatar-tile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
+
 .avatar-tile:hover {
   outline: 2px solid var(--color-border-alt);
 }
+
 .more-count {
   width: 40px;
   height: 40px;
@@ -131,6 +139,7 @@
   border: 1px dashed var(--color-border);
   border-radius: 2px;
 }
+
 .count {
   margin-left: auto;
   font-size: 0.65rem;
@@ -231,4 +240,25 @@
 
 .team-list-container {
   position: relative;
+}
+
+.avatar-tile {
+  cursor: move;
+  transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.avatar-tile.cdk-drag-preview {
+  transform: scale(1.15);
+  z-index: 9999;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+}
+
+.avatar-tile.cdk-drag-placeholder {
+  opacity: 0.25;
+  border: 1px dashed var(--color-border-alt);
+}
+
+.avatar-tile:hover {
+  transform: scale(1.05);
 }

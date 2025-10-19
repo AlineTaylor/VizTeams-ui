@@ -133,4 +133,11 @@ export class TeamService {
   getCurrentTeams(): Team[] {
     return this.teamsSubject.value;
   }
+
+  updateMemberOrder(teamId: string, members: any[]) {
+  const url = `${this.apiUrl}/${teamId}/reorder`;
+  return this.http.put<Team>(url, { members }, { headers: this.getAuthHeaders() });
+}
+
+
 }

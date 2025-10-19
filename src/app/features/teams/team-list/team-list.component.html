@@ -5,11 +5,8 @@
 
   <!-- ✅ Loading bar at top -->
   @if (loading()) {
-    <mat-progress-bar
-      mode="indeterminate"
-      color="accent"
-      class="loading-bar">
-    </mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" color="accent" class="loading-bar">
+  </mat-progress-bar>
   }
 
   <div class="teams-scroll">
@@ -23,7 +20,9 @@
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.teamName }}</mat-panel-title>
           <mat-panel-description>
-            {{ team.members.length }} member{{ team.members.length === 1 ? '' : 's' }}
+            {{ team.members.length }} member{{
+              team.members.length === 1 ? "" : "s"
+            }}
           </mat-panel-description>
         </mat-expansion-panel-header>
 
@@ -37,10 +36,18 @@
         <!-- ✅ Team Members (Avatar Strip) -->
         <div class="team-members-strip">
           @if (team.members.length > 0) {
-          <div class="avatars">
-            @for (m of getDisplayedMembers(team); track trackMember($index, m)) {
+          <!-- ✅ Draggable + Reorderable Member Avatars -->
+          <div
+            class="avatars"
+            cdkDropList
+            [cdkDropListData]="team.members"
+            (cdkDropListDropped)="onDropMember($event, team)"
+          >
+            @for (m of getDisplayedMembers(team); track trackMember($index, m))
+            {
             <div
               class="avatar-tile"
+              cdkDrag
               [matTooltip]="m.name + (m.title ? ' — ' + m.title : '')"
               matTooltipPosition="above"
             >
@@ -50,22 +57,24 @@
                 class="avatar-img"
               />
             </div>
-            }
-            @if (team.members.length > maxAvatars) {
+            } @if (team.members.length > maxAvatars) {
             <div
               class="more-count"
-              [matTooltip]="team.members.length - maxAvatars + ' more member(s)'"
+              [matTooltip]="
+                team.members.length - maxAvatars + ' more member(s)'
+              "
             >
               +{{ team.members.length - maxAvatars }}
             </div>
             }
           </div>
+
           } @else {
           <div class="empty">No members on this team.</div>
-          }
-
-          @if (capacityNotice[team._id!]) {
-            <span class="text-error capacity-msg capacity-fade">Team size limited to {{ TEAM_CAPACITY }} members</span>
+          } @if (capacityNotice[team._id!]) {
+          <span class="text-error capacity-msg capacity-fade"
+            >Team size limited to {{ TEAM_CAPACITY }} members</span
+          >
           }
 
           <span class="count">
