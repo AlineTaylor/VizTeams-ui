@@ -12,6 +12,7 @@
 }
 
 .footer-text {
+  text-decoration: none;
   grid-column: 2;
   text-align: center;
   color: var(--color-text);

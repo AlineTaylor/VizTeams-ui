@@ -1,59 +1,90 @@
-# VizTeamsUi
+# 🧡 VizTeams
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.17.
+A collaborative team management tool built in partnership with **Vizient** through **Codefi’s Full-Stack Web Development Capstone Initiative**.  
+VizTeams was developed by **Aline Taylor** and **Matthew Higgins** over a four-week sprint, following Vizient’s professional workflow and design standards.
 
-## Development server
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+  <a href="public/Screenshot%202025-10-18%20233250.png">
+    <img src="public/Screenshot%202025-10-18%20233250.png" alt="VizTeams app screenshot" width="900" />
+  </a>
+  
+</p>
+<!-- markdownlint-enable MD033 -->
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## ✨ Overview
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+VizTeams allows users to create and manage teams in an intuitive, drag-and-drop interface inspired by real-world company workflows.  
+Built with a modern Angular 19 frontend and a Node.js/Express backend, it demonstrates collaborative full-stack development using agile methodologies and industry guidance.
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🧰 Tech Stack
 
-```bash
-ng generate component component-name
-```
+### Frontend
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Angular 19
+- TypeScript
+- Angular Material (Vizient-branded styling)
+- Vercel (deployment)
 
-```bash
-ng generate --help
-```
+### Backend
 
-## Building
+- Node.js + Express
+- MongoDB + Mongoose
+- Render (deployment)
 
-To build the project run:
+### Development Tools
 
-```bash
-ng build
-```
+- Trello (XP workflow)
+- GitHub for version control and collaboration
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🚀 Live Demo
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- **Frontend:** [viz-teams-ui.vercel.app](https://viz-teams-ui.vercel.app/)
+- **Backend API:** [vizteams-api-js.onrender.com](https://vizteams-api-js.onrender.com)
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## 🧩 Features
 
-For end-to-end (e2e) testing, run:
+- 🔐 **User Authentication:** Secure signup, login, and logout system.
+- 👥 **Team Management:** Create and organize teams with up to 12 members per team (validated).
+- 🔄 **Drag-and-Drop Interface:** Easily move members between teams for a seamless workflow.
+- 🔍 **Sorting & Filtering:** View and organize teams or members dynamically.
+- 📇 **Contact Page:** Includes a functional contact form and “Meet the Team” section.
+- 🎨 **Responsive, Branded UI:** Angular Material design aligned with Vizient’s visual standards.
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 🧠 Development Process
 
-## Additional Resources
+This project was built using **Extreme Programming (XP)** methodology guided by a **Vizient developer** acting as our Product Owner and Senior Dev.  
+The process emphasized:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Pair programming and peer reviews
+- Iterative feature delivery using Trello
+- Consistent deployment and testing cycles
+- Clear documentation and maintainable architecture
+
+---
+
+## 🧑‍💻 Authors
+
+- **Aline Taylor** – Frontend & Full-Stack Development  
+  [LinkedIn](https://www.linkedin.com/in/aline-taylor) | [GitHub](https://github.com/AlineTaylor)
+
+- **Matthew Higgins** – Backend & Full-Stack Development  
+  [LinkedIn](https://www.linkedin.com/in/mthiggins1s/) | [GitHub](https://github.com/mthiggins1s)
+
+---
+
+## 💬 Acknowledgments
+
+Special thanks to **Vizient** and **Codefi** for providing mentorship, workflow guidance, and an incredible opportunity to experience real-world collaboration in a professional tech environment.
+
+---
