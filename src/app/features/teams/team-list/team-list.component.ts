@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Output, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  OnInit,
+  OnDestroy,
+  signal,
+} from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { Team } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
@@ -8,7 +15,11 @@ import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog
 import { delay } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-team-list',
@@ -17,7 +28,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css',
 })
-export class TeamListComponent implements OnInit {
+export class TeamListComponent implements OnInit, OnDestroy {
   teams: Team[] = [];
   panelOpenState: Record<string, boolean> = {};
   selectedTeam: Team | null = null;
@@ -27,11 +38,17 @@ export class TeamListComponent implements OnInit {
   capacityNotice: Record<string, boolean> = {};
   private capacityTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
+  // CdkDropList connection ids
+  dropListIds: string[] = [];
+
   // Loading state for progress bar
   loading = signal<boolean>(false);
 
   // Sort state for team list
   teamSort: 'asc' | 'desc' = 'asc';
+
+  // Track global dragging for header hover open
+  isDragging = false;
 
   @Output() selectTeam = new EventEmitter<Team | null>();
 
@@ -47,7 +64,15 @@ export class TeamListComponent implements OnInit {
     // 👇 Listen to BehaviorSubject updates for instant changes
     this.teamService.teams$.subscribe((teams) => {
       this.teams = teams;
+      this.updateDropListIds();
     });
+
+    // Light polling for live updates
+    this.teamService.startPolling(15000);
+  }
+
+  ngOnDestroy() {
+    this.teamService.stopPolling();
   }
 
   /** Teams sorted by teamName per teamSort */
@@ -73,6 +98,7 @@ export class TeamListComponent implements OnInit {
       .subscribe({
         next: (teams) => {
           this.teams = teams;
+          this.updateDropListIds();
           this.loading.set(false);
         },
         error: (err) => {
@@ -80,6 +106,17 @@ export class TeamListComponent implements OnInit {
           this.loading.set(false);
         },
       });
+  }
+
+  /** List of connected drop list ids */
+  private updateDropListIds() {
+    this.dropListIds = (this.teams || [])
+      .filter((t): t is Team & { _id: string } => !!t && !!t._id)
+      .map((t) => this.getDropListId(t._id!));
+  }
+
+  getDropListId(teamId: string) {
+    return `team-drop-${teamId}`;
   }
 
   toggle(teamId: string) {
@@ -213,6 +250,84 @@ export class TeamListComponent implements OnInit {
           },
         });
       }
+      return;
+    }
+
+    // Cross-team move
+    const destTeam = team;
+    if (!destTeam?._id) return;
+
+    if (this.isTeamFull(destTeam)) {
+      // Reject move into full team
+      this.showCapacityNotice(destTeam._id);
+      this.snack.open('Team is at capacity', 'Close', { duration: 2000 });
+      return;
+    }
+
+    // Determine source team based on previousContainer data
+    const prevArr = event.previousContainer.data;
+    const fromTeam = this.teams.find((t) => t.members === prevArr);
+    if (!fromTeam || !fromTeam._id) {
+      console.warn('Could not resolve source team for drag');
+      return;
+    }
+
+    // Determine the member being moved
+    const movedMember =
+      (event.item as any).data || prevArr[event.previousIndex];
+    if (!movedMember || !movedMember._id) {
+      console.warn('Missing member data for drag');
+      return;
+    }
+
+    // Update UI
+    transferArrayItem(
+      event.previousContainer.data,
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
+
+    // Persist moves
+    this.teamService
+      .moveMember(
+        movedMember._id,
+        fromTeam._id,
+        destTeam._id,
+        event.currentIndex
+      )
+      .subscribe({
+        next: () => {
+          this.snack.open('Member moved', 'Close', { duration: 2000 });
+          // Sync from backend to ensure consistency
+          this.teamService.loadTeams();
+        },
+        error: (err) => {
+          console.error('Failed to move member:', err);
+          this.snack.open('Failed to move member', 'Close', { duration: 2500 });
+          // Revert by reloading from backend
+          this.teamService.loadTeams();
+        },
+      });
+  }
+
+  onDropListEntered(team: Team) {
+    if (team?._id) {
+      this.panelOpenState[team._id] = true;
+    }
+  }
+
+  onDragStart() {
+    this.isDragging = true;
+  }
+
+  onDragEnd() {
+    this.isDragging = false;
+  }
+
+  onHeaderHover(team: Team) {
+    if (this.isDragging && team?._id) {
+      this.panelOpenState[team._id] = true;
     }
   }
 }
