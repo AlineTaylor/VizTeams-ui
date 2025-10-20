@@ -1,0 +1,9 @@
+<div class="carousel-wrapper">
+  @for (img of images; let i = $index; track i) {
+  <div
+    class="carousel-image"
+    [class.active]="i === currentIndex"
+    [style.backgroundImage]="'url(' + img + ')'"
+  ></div>
+  }
+</div>

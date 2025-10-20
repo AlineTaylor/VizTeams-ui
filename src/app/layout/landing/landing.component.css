@@ -1,7 +1,11 @@
 .landing-wrapper {
   padding: 48px 32px;
   max-width: 480px;
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
 }
+
 h1 {
   margin: 0 0 8px;
   font-size: 1.75rem;
@@ -9,4 +13,13 @@ h1 {
 p {
   margin: 0 0 24px;
   opacity: 0.8;
+}
+.landing-wrapper h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.landing-wrapper p {
+  font-size: 1.2rem;
+  opacity: 0.9;
 }
