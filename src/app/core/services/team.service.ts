@@ -10,6 +10,7 @@ export class TeamService {
   private teamsSubject = new BehaviorSubject<Team[]>([]);
   teams$ = this.teamsSubject.asObservable();
   private http = inject(HttpClient);
+  private pollHandle: any;
   private getAuthHeaders(): HttpHeaders {
     const token = sessionStorage.getItem('token');
     return new HttpHeaders({
@@ -134,10 +135,53 @@ export class TeamService {
     return this.teamsSubject.value;
   }
 
+  /** polling for teams to reflect external changes */
+  startPolling(intervalMs = 15000) {
+    this.stopPolling();
+    this.pollHandle = setInterval(() => this.loadTeams(), intervalMs);
+  }
+
+  stopPolling() {
+    if (this.pollHandle) {
+      clearInterval(this.pollHandle);
+      this.pollHandle = undefined;
+    }
+  }
   updateMemberOrder(teamId: string, members: any[]) {
-  const url = `${this.apiUrl}/${teamId}/reorder`;
-  return this.http.put<Team>(url, { members }, { headers: this.getAuthHeaders() });
-}
+    const url = `${this.apiUrl}/${teamId}/reorder`;
+    return this.http.put<Team>(
+      url,
+      { members },
+      { headers: this.getAuthHeaders() }
+    );
+  }
 
-
+  /** Move an existing member across teams */
+  moveMember(
+    memberId: string,
+    fromTeamId: string,
+    toTeamId: string,
+    toIndex?: number
+  ) {
+    const url = `${this.apiUrl}/move-member`;
+    const body: any = { memberId, fromTeamId, toTeamId };
+    if (typeof toIndex === 'number') body.toIndex = toIndex;
+    return this.http
+      .post<{ fromTeam: Team; toTeam: Team }>(url, body, {
+        headers: this.getAuthHeaders(),
+      })
+      .pipe(
+        tap((res) => {
+          const current = this.teamsSubject.value;
+          const map = new Map(current.map((t) => [t._id, t]));
+          if (res.fromTeam?._id) map.set(res.fromTeam._id, res.fromTeam);
+          if (res.toTeam?._id) map.set(res.toTeam._id, res.toTeam);
+          this.teamsSubject.next(Array.from(map.values()));
+        }),
+        catchError((err) => {
+          console.error('❌ moveMember failed:', err);
+          return of({ fromTeam: undefined as any, toTeam: undefined as any });
+        })
+      );
+  }
 }

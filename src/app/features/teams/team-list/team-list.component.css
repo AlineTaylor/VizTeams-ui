@@ -124,6 +124,13 @@
   scrollbar-width: none;
 }
 
+/* Highlight when a list is an active drop target (hello, UX) */
+.avatars.cdk-drop-list-dragging,
+.avatars.cdk-drop-list-receiving {
+  outline: 2px dashed var(--accent-color, #3f51b5);
+  outline-offset: 4px;
+}
+
 .team-members-strip .avatars::-webkit-scrollbar {
   display: none;
 }

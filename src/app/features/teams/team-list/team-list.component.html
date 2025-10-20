@@ -36,6 +36,7 @@
         [expanded]="panelOpenState[team._id!]"
         (opened)="panelOpenState[team._id!] = true; onSelect(team)"
         (closed)="onClose(team)"
+        (mouseenter)="onHeaderHover(team)"
       >
         <mat-expansion-panel-header>
           <mat-panel-title>{{ team.teamName }}</mat-panel-title>
@@ -59,7 +60,10 @@
           <div
             class="avatars"
             cdkDropList
+            [id]="getDropListId(team._id!)"
             [cdkDropListData]="team.members"
+            [cdkDropListConnectedTo]="dropListIds"
+            (cdkDropListEntered)="onDropListEntered(team)"
             (cdkDropListDropped)="onDropMember($event, team)"
           >
             @for (m of getDisplayedMembers(team); track trackMember($index, m))
@@ -67,6 +71,9 @@
             <div
               class="avatar-tile"
               cdkDrag
+              [cdkDragData]="m"
+              (cdkDragStarted)="onDragStart()"
+              (cdkDragEnded)="onDragEnd()"
               [matTooltip]="m.name + (m.title ? ' — ' + m.title : '')"
               matTooltipPosition="above"
             >
