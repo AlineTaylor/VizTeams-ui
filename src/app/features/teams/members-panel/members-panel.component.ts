@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, inject } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
-import { Team } from '../../../../shared/models/team.models';
+import { Team, TeamMember } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
 import { EditTeamDialogComponent } from '../edit-team-dialog/edit-team-dialog.component';
 import { TeamService } from '../../../core/services/team.service';
@@ -20,7 +20,13 @@ export class MembersPanelComponent implements OnChanges {
   @Input() team: Team | null = null;
   @Input() allTeams: Team[] = [];
   hasTeam = false;
-  displayMembers: any[] = [];
+  displayMembers: Array<TeamMember & { teamName?: string }> = [];
+
+  // State for sorting/filtering
+  sortKey: 'first' | 'last' = 'first';
+  sortDir: 'asc' | 'desc' = 'asc';
+  roleFilter: string = 'all';
+  roleOptions: string[] = [];
 
   // Total member counter (used for default 'All Members' view)
   get totalMembers(): number {
@@ -38,18 +44,102 @@ export class MembersPanelComponent implements OnChanges {
   private memberService = inject(MemberService);
 
   ngOnChanges() {
+    this.rebuildAndApply();
+  }
+
+  private rebuildAndApply() {
+    // Create base list
+    let list: Array<TeamMember & { teamName?: string }> = [];
     if (this.team) {
       this.hasTeam = true;
-      this.displayMembers = this.team.members;
+      list = [...(this.team.members || [])];
     } else {
       this.hasTeam = false;
-      this.displayMembers = this.allTeams.flatMap((t) =>
-        t.members.map((m) => ({
-          ...m,
-          teamName: t.teamName,
-        }))
+      list = this.allTeams.flatMap((t) =>
+        (t.members || []).map((m) => ({ ...m, teamName: t.teamName }))
       );
     }
+
+    // Role options from current list
+    const roles = Array.from(
+      new Set(list.map((m) => (m.title || '').trim()).filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    this.roleOptions = roles;
+
+    // Check current filter and reset if invalid
+    if (this.roleFilter !== 'all' && !roles.includes(this.roleFilter)) {
+      this.roleFilter = 'all';
+    }
+    // Apply filter + sort
+    this.displayMembers = this.applySortAndFilter(list);
+  }
+
+  onRoleFilterChange(role: string) {
+    this.roleFilter = role;
+    this.displayMembers = this.applySortAndFilter(this.displayMembers, true);
+  }
+
+  onSortKeyChange(key: 'first' | 'last') {
+    this.sortKey = key;
+    this.displayMembers = this.applySortAndFilter(this.displayMembers, true);
+  }
+
+  onSortDirChange(dir: 'asc' | 'desc') {
+    this.sortDir = dir;
+    this.displayMembers = this.applySortAndFilter(this.displayMembers, true);
+  }
+
+  private applySortAndFilter(
+    base: Array<TeamMember & { teamName?: string }>,
+    baseIsAlreadyAltered = false
+  ) {
+    // If base is current display list (already filtered), rebuild from source first to avoid "double-filtering"
+    let list = baseIsAlreadyAltered ? this.getBaseList() : base.slice(); //shallow copy
+
+    // Filter by role
+    if (this.roleFilter !== 'all') {
+      list = list.filter((m) => (m.title || '').trim() === this.roleFilter);
+    }
+
+    // SORT \o/
+    const dir = this.sortDir === 'asc' ? 1 : -1;
+    list.sort((a, b) => {
+      const aKey =
+        this.sortKey === 'first'
+          ? this.firstNameOf(a.name)
+          : this.lastNameOf(a.name);
+      const bKey =
+        this.sortKey === 'first'
+          ? this.firstNameOf(b.name)
+          : this.lastNameOf(b.name);
+      const cmp = aKey.localeCompare(bKey, undefined, { sensitivity: 'base' });
+      return dir * cmp;
+    });
+
+    return list;
+  }
+
+  private getBaseList(): Array<TeamMember & { teamName?: string }> {
+    if (this.hasTeam && this.team) {
+      return [...(this.team.members || [])];
+    }
+    return this.allTeams.flatMap((t) =>
+      (t.members || []).map((m) => ({ ...m, teamName: t.teamName }))
+    );
+  }
+
+  private firstNameOf(name: string | undefined): string {
+    if (!name) return '';
+    const parts = name.trim().split(/\s+/);
+    return (parts[0] || '').toLowerCase();
+  }
+
+  private lastNameOf(name: string | undefined): string {
+    if (!name) return '';
+    const parts = name.trim().split(/\s+/);
+    return (
+      parts.length > 1 ? parts[parts.length - 1] : parts[0] || ''
+    ).toLowerCase();
   }
 
   // ✏️ Edit Team Dialog
@@ -118,6 +208,8 @@ export class MembersPanelComponent implements OnChanges {
         }
         this.snack.open('Member updated', 'Close', { duration: 2500 });
         console.log('✅ Member updated:', updatedMember);
+        // Re-apply sorting/filter after update
+        this.rebuildAndApply();
       }
     });
   }
@@ -148,7 +240,7 @@ export class MembersPanelComponent implements OnChanges {
           this.team!.members = this.team!.members.filter(
             (m) => m._id !== member._id
           );
-          this.displayMembers = this.team!.members;
+          this.rebuildAndApply();
           // Sync from backend
           this.teamService.loadTeams();
           this.snack.open('Member removed from team', 'Close', {

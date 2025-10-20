@@ -8,6 +8,52 @@
       All Members <span class="total-count">({{ totalMembers }})</span>
     </h3>
     }
+    <span class="spacer"></span>
+    <!-- Sort buttonnsss -->
+    <div class="controls" aria-label="Member sort and filter controls">
+      <mat-form-field
+        appearance="outline"
+        class="role-filter"
+        subscriptSizing="dynamic"
+      >
+        <mat-label>Role</mat-label>
+        <mat-select
+          [(ngModel)]="roleFilter"
+          (selectionChange)="onRoleFilterChange($event.value)"
+        >
+          <mat-option value="all">All</mat-option>
+          @for (role of roleOptions; track role) {
+          <mat-option [value]="role">{{ role }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-button-toggle-group
+        [(ngModel)]="sortKey"
+        (change)="onSortKeyChange($event.value)"
+        aria-label="Sort by"
+      >
+        <mat-button-toggle [value]="'first'" matTooltip="Sort by First Name"
+          >First</mat-button-toggle
+        >
+        <mat-button-toggle [value]="'last'" matTooltip="Sort by Last Name"
+          >Last</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+
+      <mat-button-toggle-group
+        [(ngModel)]="sortDir"
+        (change)="onSortDirChange($event.value)"
+        aria-label="Sort direction"
+      >
+        <mat-button-toggle [value]="'asc'" matTooltip="Ascending"
+          >A-Z</mat-button-toggle
+        >
+        <mat-button-toggle [value]="'desc'" matTooltip="Descending"
+          >Z-A</mat-button-toggle
+        >
+      </mat-button-toggle-group>
+    </div>
   </div>
 
   <div class="members-grid">

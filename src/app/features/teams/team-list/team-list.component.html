@@ -1,6 +1,23 @@
 <mat-card class="team-list-card">
   <div class="card-header">
-    <span>Teams</span>
+    <h3 class="team-name">Teams</h3>
+    <span class="spacer"></span>
+    <div class="controls">
+      <!-- Team sort buttoonnsss -->
+      <mat-button-toggle-group
+        name="teamSort"
+        [(ngModel)]="teamSort"
+        aria-label="Sort teams"
+        class="sort-toggle-group"
+      >
+        <mat-button-toggle [value]="'asc'" matTooltip="Sort A → Z">
+          A-Z
+        </mat-button-toggle>
+        <mat-button-toggle [value]="'desc'" matTooltip="Sort Z → A">
+          Z-A
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
   </div>
 
   <!-- ✅ Loading bar at top -->
@@ -14,7 +31,7 @@
 
   <div class="teams-scroll">
     <mat-accordion multi>
-      @for (team of teams; track team._id) {
+      @for (team of getSortedTeams(); track team._id) {
       <mat-expansion-panel
         [expanded]="panelOpenState[team._id!]"
         (opened)="panelOpenState[team._id!] = true; onSelect(team)"

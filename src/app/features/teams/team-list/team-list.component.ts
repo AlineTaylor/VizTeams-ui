@@ -2,21 +2,18 @@ import { Component, EventEmitter, Output, OnInit, signal } from '@angular/core';
 import { SharedModule } from '../../../../shared/shared.module';
 import { Team } from '../../../../shared/models/team.models';
 import { MatDialog } from '@angular/material/dialog';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { AddTeamDialogComponent } from '../add-team-dialog/add-team-dialog.component';
 import { TeamService } from '../../../core/services/team.service';
 import { AddMemberDialogComponent } from '../add-member-dialog/add-member-dialog.component';
 import { delay } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-
 
 @Component({
   selector: 'app-team-list',
   standalone: true,
-  imports: [SharedModule, MatProgressBarModule, DragDropModule, MatTooltipModule],
+  imports: [SharedModule, DragDropModule],
   templateUrl: './team-list.component.html',
   styleUrl: './team-list.component.css',
 })
@@ -33,6 +30,9 @@ export class TeamListComponent implements OnInit {
   // Loading state for progress bar
   loading = signal<boolean>(false);
 
+  // Sort state for team list
+  teamSort: 'asc' | 'desc' = 'asc';
+
   @Output() selectTeam = new EventEmitter<Team | null>();
 
   constructor(
@@ -47,6 +47,20 @@ export class TeamListComponent implements OnInit {
     // 👇 Listen to BehaviorSubject updates for instant changes
     this.teamService.teams$.subscribe((teams) => {
       this.teams = teams;
+    });
+  }
+
+  /** Teams sorted by teamName per teamSort */
+  getSortedTeams(): Team[] {
+    return [...this.teams].sort((a, b) => {
+      const cmp = (a.teamName || '').localeCompare(
+        b.teamName || '',
+        undefined,
+        {
+          sensitivity: 'base',
+        }
+      );
+      return this.teamSort === 'asc' ? cmp : -cmp;
     });
   }
 
@@ -184,17 +198,21 @@ export class TeamListComponent implements OnInit {
       console.log(`${team.teamName} reordered:`, team.members);
 
       if (team._id) {
-      this.teamService.updateMemberOrder(team._id, team.members).subscribe({
-        next: (updatedTeam) => {
-          console.log("✅ Order saved to backend:", updatedTeam);
-          this.snack.open('Member order updated', 'Close', { duration: 2000 });
-        },
-        error: (err) => {
-          console.error('❌ Failed to save order:', err);
-          this.snack.open('Failed to save order', 'Close', { duration: 2000 });
-        },
-      });
+        this.teamService.updateMemberOrder(team._id, team.members).subscribe({
+          next: (updatedTeam) => {
+            console.log('✅ Order saved to backend:', updatedTeam);
+            this.snack.open('Member order updated', 'Close', {
+              duration: 2000,
+            });
+          },
+          error: (err) => {
+            console.error('❌ Failed to save order:', err);
+            this.snack.open('Failed to save order', 'Close', {
+              duration: 2000,
+            });
+          },
+        });
+      }
     }
   }
-}
 }
