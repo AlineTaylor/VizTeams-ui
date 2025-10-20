@@ -1,39 +1,61 @@
-.carousel-wrapper {
-  position: absolute;
-  top: 64px; /* below header */
-  bottom: 48px; /* above footer */
+/* ===============================
+   Background Wrapper
+   =============================== */
+.pattern-bg {
+  position: absolute;      /* 🧩 back to absolute so footer stays visible */
+  top: 64px;               /* below header */
+  bottom: 48px;            /* above footer */
   left: 0;
   right: 0;
   overflow: hidden;
-  z-index: 0; /* ✅ visible but behind text */
+  z-index: 0;
+  background-color: #ffffff; /* white background */
 }
 
-.carousel-image {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 2s ease-in-out;
-}
-
-.carousel-image.active {
-  opacity: 1;
-}
-
-.landing-wrapper {
-  position: relative;
-  z-index: 1; /* ✅ ensures text stays above images */
-}
-
-.carousel-wrapper::after {
+/* Orange squiggly SVG pattern overlay */
+.pattern-bg::after {
   content: "";
   position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 120px;
-  background: linear-gradient(to top, white 10%, transparent 90%);
+  inset: 0;
+  background-image: url('/Squiggles2--Arvin61r58.svg');
+  background-repeat: repeat;
+  background-size: 350px auto;
+  opacity: 0.25;
+  animation: movePattern 45s linear infinite; /* smooth and quick */
+  z-index: 1;
+  filter: invert(53%) sepia(96%) saturate(1677%) hue-rotate(359deg)
+    brightness(100%) contrast(98%);
+}
+
+/* ===============================
+   Animation
+   =============================== */
+@keyframes movePattern {
+  0%   { background-position: 0 0; }
+  50%  { background-position: 800px 400px; }
+  100% { background-position: 0 0; }
+}
+
+/* ===============================
+   Foreground Text
+   =============================== */
+.landing-wrapper {
+  position: relative;
+  z-index: 3;
+  color: #ff6600;
+  text-shadow: none;
+  text-align: left;
+  margin-top: 90px;   /* ⬆️ moves text upward slightly */
+  margin-left: 3%;     /* ⬅️ nudges text more to the left */
+}
+
+.landing-wrapper h1 {
+  font-size: 2.6rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.landing-wrapper p {
+  font-size: 1.2rem;
+  opacity: 0.85;
 }
