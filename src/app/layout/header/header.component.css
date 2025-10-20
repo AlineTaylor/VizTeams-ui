@@ -20,10 +20,17 @@
   cursor: pointer;
 }
 
-.user {
+.auth-area {
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
+}
+.user-name {
+  font-weight: 500;
+  white-space: nowrap;
+  max-width: 32ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .auth-trigger {
   height: 100%;

@@ -22,6 +22,10 @@
 
 .panel-header {
   padding: 24px 24px 8px 24px;
+  display: flex;
+  align-items: center;
+  background: var(--color-bg);
+  border-bottom: 2px solid var(--color-border-alt);
 }
 .team-name {
   margin: 0;
@@ -33,6 +37,31 @@
   font-weight: 500;
   opacity: 0.75;
   margin-left: 6px;
+}
+
+.panel-header .spacer {
+  flex: 1;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.controls .role-filter {
+  width: 180px;
+}
+
+/* Stack buttons on small screens to match Teams list */
+@media (max-width: 640px) {
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 8px;
+  }
 }
 
 .members-grid {
