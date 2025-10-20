@@ -1,11 +1,6 @@
-<div class="pattern-bg"></div> <!-- 🔸 Background layer -->
-
 <div class="teams-page">
   <!-- Left: Team List -->
-  <app-team-list
-    (selectTeam)="handleSelect($event)"
-    #teamList
-  ></app-team-list>
+  <app-team-list (selectTeam)="handleSelect($event)" #teamList></app-team-list>
 
   <!-- Right: Members Panel -->
   <app-members-panel
